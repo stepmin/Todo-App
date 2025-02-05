@@ -1,0 +1,57 @@
+name: iOS - Release
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    name: Create new builds
+    runs-on: [self-hosted, ios-build]
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        continue-on-error: true
+        with:
+          clean: false
+      - name: Setup tools
+        working-directory: ios
+        run: ./scripts/setup.sh
+      - name: Generate build number
+        run: echo "BUILD_NUMBER=$(echo `date +"%y%m%d%H%M"`)" >> $GITHUB_ENV
+      - name: Prepare App Store Connect API key file
+        env:
+          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_MATEE }}
+        working-directory: ios
+        run: echo "$APP_STORE_CONNECT_API_KEY_CONTENT" > AuthKey_Matee.p8
+      - name: Create builds
+        working-directory: ios
+        run: |
+          fastlane build_alpha
+          fastlane build_production
+          fastlane tag
+
+  deploy-alpha:
+    name: Deploy alpha
+    needs: build
+    runs-on: [self-hosted, ios-alpha]
+    timeout-minutes: 120
+    steps:
+      - name: Upload the Alpha build to the TestFlight
+        env:
+          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_MATEE }}
+          SLACK_URL: ${{ secrets.FASTLANE_SLACK_URL }}
+        working-directory: ios
+        run: fastlane upload_testflight_alpha distribute_external:true
+
+  deploy-production:
+    name: Deploy production
+    needs: build
+    runs-on: [self-hosted, ios-prod]
+    timeout-minutes: 120
+    steps:
+      - name: Upload the Production build to the TestFlight
+        env:
+          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_MATEE }}
+          SLACK_URL: ${{ secrets.FASTLANE_SLACK_URL }}
+        working-directory: ios
+        run: fastlane upload_testflight_production distribute_external:true
