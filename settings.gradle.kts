@@ -27,4 +27,4 @@ include(":android:samplecomposemultiplatform")
 
 include(":shared:core")
 include(":shared:base")
-include(":shared:samplecomposenavigation")
+include(":shared:todoFeature")

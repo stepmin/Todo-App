@@ -35,5 +35,5 @@ ktlint {
 
 dependencies {
     commonMainApi(project(":shared:base"))
-    commonMainApi(project(":shared:samplecomposenavigation"))
+    commonMainApi(project(":shared:todoFeature"))
 }
