@@ -5,6 +5,7 @@ import kmp.shared.samplecomposenavigation.data.source.TaskSource
 import kmp.shared.samplecomposenavigation.domain.repository.TasksRepository
 import kmp.shared.samplecomposenavigation.domain.usecase.GetTasksUseCase
 import kmp.shared.samplecomposenavigation.domain.usecase.GetTasksUseCaseImpl
+import kmp.shared.samplecomposenavigation.infrastructure.db.TaskLocalSource
 import kmp.shared.samplecomposenavigation.infrastructure.remote.TaskService
 import kmp.shared.samplecomposenavigation.infrastructure.source.TasksSourceImpl
 import kmp.shared.samplecomposenavigation.presentation.vm.TodoListViewModel
@@ -29,5 +30,8 @@ val todoModuleModule = module {
 
     // Remote services
     singleOf(::TaskService)
+
+    // db
+    singleOf(::TaskLocalSource)
 
 }

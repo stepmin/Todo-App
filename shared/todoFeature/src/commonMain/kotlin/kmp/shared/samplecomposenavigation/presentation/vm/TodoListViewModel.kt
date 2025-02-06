@@ -1,5 +1,6 @@
 package kmp.shared.samplecomposenavigation.presentation.vm
 
+import androidx.lifecycle.viewModelScope
 import kmp.shared.base.ErrorResult
 import kmp.shared.base.Result
 import kmp.shared.samplecomposenavigation.base.vm.BaseViewModel
@@ -8,6 +9,8 @@ import kmp.shared.samplecomposenavigation.base.vm.VmIntent
 import kmp.shared.samplecomposenavigation.base.vm.VmState
 import kmp.shared.samplecomposenavigation.domain.model.Task
 import kmp.shared.samplecomposenavigation.domain.usecase.GetTasksUseCase
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class TodoListViewModel(
     private val getTasksData: GetTasksUseCase,
@@ -24,11 +27,12 @@ class TodoListViewModel(
 
     private suspend fun loadData() {
         update { copy(loading = true) }
-        when (val result = getTasksData()) {
-            is Result.Success -> update { copy(tasks = result.data, loading = false) }
-            is Result.Error -> update { copy(error = result.error, loading = false) }
-        }
-
+        getTasksData.invoke().onEach { result ->
+            when (result) {
+                is Result.Success -> update { copy(tasks = result.data, loading = false) }
+                is Result.Error -> update { copy(error = result.error, loading = false) }
+            }
+        }.launchIn(viewModelScope)
     }
 
 }

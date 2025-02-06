@@ -14,5 +14,6 @@ sealed class CommonError(localizedMessage: StringDesc, throwable: Throwable? = n
     throwable = throwable,
 ) {
     class NoNetworkConnection(throwable: Throwable?) : CommonError(localizedMessage = MR.strings.error_no_internet_connection.desc(), throwable = throwable)
+    class NetworkConnectionError(throwable: Throwable?) : CommonError(localizedMessage = MR.strings.unknown_error.desc(), throwable = throwable)
     data object Unknown : CommonError(localizedMessage = MR.strings.unknown_error.desc())
 }

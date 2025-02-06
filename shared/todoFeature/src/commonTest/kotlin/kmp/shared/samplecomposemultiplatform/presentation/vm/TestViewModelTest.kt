@@ -3,6 +3,7 @@
 package kmp.shared.samplecomposemultiplatform.presentation.vm
 
 import dev.mokkery.answering.calls
+import dev.mokkery.every
 import dev.mokkery.everySuspend
 import dev.mokkery.mock
 import kmp.shared.base.ErrorResult
@@ -15,7 +16,10 @@ import kmp.shared.samplecomposenavigation.presentation.vm.TodoListIntent
 import kmp.shared.samplecomposenavigation.presentation.vm.TodoListViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
@@ -44,7 +48,7 @@ class TodoListViewModelTest : KoinTest {
         startKoin {
             modules(
                 todoModuleModule,
-                testModule
+                testModule,
             )
         }
         // Set the main dispatcher for testing
@@ -53,34 +57,40 @@ class TodoListViewModelTest : KoinTest {
 
     @Test
     fun `data are successfully transformed to state`() = runTest {
-        everySuspend { sourceMock.getTasks() } calls {
-            Result.Success(listOf<Task>(
-                Task(id = 1, userId = 5, title = "title", completed = false),
-                Task(id = 2, userId = 5, title = "title", completed = false),
-                Task(id = 3, userId = 5, title = "title", completed = false),
-            ))
+        every { sourceMock.observeTasks() } calls {
+            flowOf(
+                Result.Success(
+                    listOf<Task>(
+                        Task(id = 1, userId = 5, title = "title", completed = false),
+                        Task(id = 2, userId = 5, title = "title", completed = false),
+                        Task(id = 3, userId = 5, title = "title", completed = false),
+                    ),
+                ),
+            )
         }
 
         val viewModel = get<TodoListViewModel>()
 
         viewModel.onIntent(TodoListIntent.OnAppeared)
 
-        runCurrent()
+        advanceUntilIdle()
 
-        assertTrue(viewModel.state.value.tasks?.isNotEmpty() == true)
+        assertTrue(viewModel.state.value.tasks?.size == 3)
     }
 
     @Test
     fun `error response is presented with appropriate state`() = runTest {
-        everySuspend { sourceMock.getTasks() } calls {
-            Result.Error(CommonError.NoNetworkConnection(Exception("")))
+        every { sourceMock.observeTasks() } calls {
+            flowOf(
+                Result.Error(CommonError.NoNetworkConnection(Exception(""))),
+            )
         }
 
         val viewModel = get<TodoListViewModel>()
 
         viewModel.onIntent(TodoListIntent.OnAppeared)
 
-        runCurrent()
+        advanceUntilIdle()
 
         assertTrue(viewModel.state.value.error is ErrorResult)
     }

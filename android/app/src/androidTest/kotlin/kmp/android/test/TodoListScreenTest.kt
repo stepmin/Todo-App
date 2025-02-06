@@ -34,7 +34,7 @@ internal class TodoListScreenTest : KoinTest {
     fun testListDisplayed() {
         with(composeTestRule) {
             onSampleSharedViewModelScreen {
-                checkThatTodoListIsVisible()
+                checkTodoList()
             }
         }
     }

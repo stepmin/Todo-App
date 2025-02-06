@@ -34,7 +34,7 @@ fun TodoListScreen(
             CircularProgressIndicator()
         } else {
             Column(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxSize()
                     .padding(16.dp),
             ) {
@@ -89,7 +89,8 @@ fun TaskItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .testTag(TestTags.TodoListScreen.Task),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Checkbox(
