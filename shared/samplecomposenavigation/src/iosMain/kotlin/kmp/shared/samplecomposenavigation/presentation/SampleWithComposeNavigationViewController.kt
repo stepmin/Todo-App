@@ -6,8 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import kmp.shared.samplecomposemultiplatform.presentation.ui.LocalSampleComposeMultiplatformViewFactory
 import kmp.shared.samplecomposemultiplatform.presentation.ui.SampleComposeMultiplatformViewFactory
-import kmp.shared.samplecomposenavigation.presentation.navigation.SampleComposeNavigationGraph
-import kmp.shared.samplecomposenavigation.presentation.navigation.sampleComposeNavigationNavGraph
+import kmp.shared.samplecomposenavigation.presentation.navigation.TodoNavigationGraph
+import kmp.shared.samplecomposenavigation.presentation.navigation.todoNavigationNavGraph
 import platform.UIKit.UIViewController
 
 @Suppress("Unused", "FunctionName")
@@ -23,9 +23,9 @@ fun SampleWithComposeNavigationViewController(
             val navController = rememberNavController()
             NavHost(
                 navController = navController,
-                startDestination = SampleComposeNavigationGraph.rootPath,
+                startDestination = TodoNavigationGraph.rootPath,
             ) {
-                sampleComposeNavigationNavGraph(
+                todoNavigationNavGraph(
                     navHostController = navController,
                     onShowMessage = showMessage,
                 )

@@ -25,8 +25,8 @@ class TodoListViewModel(
 
     private suspend fun loadData() {
         update { copy(loading = true) }
-        when (val result = getTasksData.invoke()) {
-            is Result.Success -> update { copy(task = result.data, loading = false) }
+        when (val result = getTasksData()) {
+            is Result.Success -> update { copy(tasks = result.data, loading = false) }
             is Result.Error -> update { copy(error = result.error, loading = false) }
         }
 
@@ -36,7 +36,7 @@ class TodoListViewModel(
 
 data class TodoListState(
     val loading: Boolean = false,
-    val task: List<Task>? = null,
+    val tasks: List<Task>? = null,
     val error: ErrorResult? = null,
 ) : VmState {
     constructor() : this(true, null, null)

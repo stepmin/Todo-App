@@ -14,23 +14,23 @@ import kmp.shared.samplecomposemultiplatform.presentation.vm.SampleNextEvent
 import kmp.shared.samplecomposemultiplatform.presentation.vm.SampleNextIntent
 import kmp.shared.samplecomposemultiplatform.presentation.vm.SampleNextViewModel
 import kmp.shared.samplecomposenavigation.presentation.common.AppTheme
-import kmp.shared.samplecomposenavigation.presentation.navigation.SampleComposeNavigationGraph
+import kmp.shared.samplecomposenavigation.presentation.navigation.TodoNavigationGraph
 import kmp.shared.samplecomposenavigation.presentation.navigation.composableDestination
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.compose.viewmodel.koinViewModel
 
-internal fun NavController.navigateToComposeMultiplatformNext() {
-    navigate(SampleComposeNavigationGraph.Next())
+internal fun NavController.navigateToDetail() {
+    navigate(TodoNavigationGraph.Detail())
 }
 
-internal fun NavGraphBuilder.sampleComposeMultiplatformNextRoute(
+internal fun NavGraphBuilder.todoListNavigationDetailRoute(
     onShowMessage: (String) -> Unit,
     navigateToBack: () -> Unit,
 ) {
     composableDestination(
-        destination = SampleComposeNavigationGraph.Next,
+        destination = TodoNavigationGraph.Detail,
     ) {
-        SampleComposeNavigationNextRoute(
+        TodoNavigationDetailRoute(
             onShowMessage = onShowMessage,
             navigateToBack = navigateToBack,
         )
@@ -38,7 +38,7 @@ internal fun NavGraphBuilder.sampleComposeMultiplatformNextRoute(
 }
 
 @Composable
-internal fun SampleComposeNavigationNextRoute(
+internal fun TodoNavigationDetailRoute(
     onShowMessage: (String) -> Unit,
     navigateToBack: () -> Unit,
 ) {

@@ -1,4 +1,4 @@
-package kmp.shared.samplecomposemultiplatform.presentation.ui
+package kmp.shared.samplecomposenavigation.presentation.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,9 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kmp.shared.samplecomposemultiplatform.presentation.vm.TodoListIntent
+import kmp.shared.samplecomposemultiplatform.presentation.vm.TodoListViewModel
 
 @Composable
-fun TodoeyApp(
+fun TodoListScreen(
     modifier: Modifier = Modifier
 ) {
     Scaffold(

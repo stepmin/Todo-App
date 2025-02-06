@@ -11,10 +11,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,13 +23,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dev.icerock.moko.resources.compose.localized
 import kmp.android.navigation.NavBarFeature
-import kmp.android.sample.navigation.SampleGraph
-import kmp.android.sample.navigation.sampleNavGraph
-import kmp.android.samplecomposemultiplatform.navigation.sampleComposeMultiplatformNavGraph
-import kmp.android.samplesharedviewmodel.navigation.sampleSharedViewModelNavGraph
 import kmp.android.shared.style.Elevation
-import kmp.shared.samplecomposenavigation.presentation.navigation.SampleComposeNavigationGraph
-import kmp.shared.samplecomposenavigation.presentation.navigation.sampleComposeNavigationNavGraph
+import kmp.shared.samplecomposenavigation.presentation.navigation.TodoNavigationGraph
+import kmp.shared.samplecomposenavigation.presentation.navigation.todoNavigationNavGraph
 
 @Composable
 fun Root(modifier: Modifier = Modifier) {
@@ -45,15 +38,11 @@ fun Root(modifier: Modifier = Modifier) {
         Box(modifier = Modifier.padding(padding)) {
             NavHost(
                 navController,
-                startDestination = SampleComposeNavigationGraph.rootPath,
+                startDestination = TodoNavigationGraph.rootPath,
             ) {
-//                sampleNavGraph(navController)
+                todoNavigationNavGraph(navController, onShowMessage = {
 
-//                sampleSharedViewModelNavGraph(navController)
-
-//                sampleComposeMultiplatformNavGraph(navController)
-
-                sampleComposeNavigationNavGraph(navController, onShowMessage = {})
+                })
             }
         }
     }

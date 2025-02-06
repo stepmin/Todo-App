@@ -5,7 +5,9 @@ package kmp.shared.samplecomposemultiplatform.presentation.vm
 import dev.mokkery.answering.calls
 import dev.mokkery.everySuspend
 import dev.mokkery.mock
+import kmp.shared.base.ErrorResult
 import kmp.shared.base.Result
+import kmp.shared.base.error.domain.CommonError
 import kmp.shared.samplecomposemultiplatform.data.source.TaskSource
 import kmp.shared.samplecomposemultiplatform.di.sampleComposeMultiplatformModule
 import kmp.shared.samplecomposemultiplatform.domain.model.Task
@@ -63,7 +65,22 @@ class TodoListViewModelTest : KoinTest {
 
         runCurrent()
 
-        assertTrue(viewModel.state.value.task?.isNotEmpty() == true)
+        assertTrue(viewModel.state.value.tasks?.isNotEmpty() == true)
+    }
+
+    @Test
+    fun `error response is presented with appropriate state`() = runTest {
+        everySuspend { sourceMock.getTasks() } calls {
+            Result.Error(CommonError.NoNetworkConnection(Exception("")))
+        }
+
+        val viewModel = get<TodoListViewModel>()
+
+        viewModel.onIntent(TodoListIntent.OnAppeared)
+
+        runCurrent()
+
+        assertTrue(viewModel.state.value.error is ErrorResult)
     }
 
     @AfterTest
