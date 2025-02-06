@@ -16,5 +16,5 @@ ktlint {
 
 dependencies {
     commonMainImplementation(project(":shared:base"))
-    commonMainImplementation(project(":shared:sample"))
+//    commonMainImplementation(project(":shared:sample"))
 }
