@@ -75,8 +75,8 @@ internal object HttpClient {
                 protocol = URLProtocol.HTTPS
                 // Set your host URLs
                 host = when (config.apiVariant) {
-                    ApiVariant.Alpha -> "devstack-server-production.up.railway.app"
-                    ApiVariant.Production -> "devstack-server-production.up.railway.app"
+                    ApiVariant.Alpha -> "jsonplaceholder.typicode.com"
+                    ApiVariant.Production -> "jsonplaceholder.typicode.com"
                 }
             }
             contentType(ContentType.Application.Json)

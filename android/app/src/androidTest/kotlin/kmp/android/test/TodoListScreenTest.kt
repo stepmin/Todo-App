@@ -2,34 +2,39 @@ package kmp.android.test
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import kmp.android.MainActivity
-import kmp.android.screen.onSampleScreen
+import kmp.android.screen.onSampleSharedViewModelScreen
 import kotlinx.coroutines.runBlocking
+import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Rule
 import org.junit.Test
 import org.koin.test.KoinTest
 
-internal class SampleScreenTest : KoinTest {
+internal class TodoListScreenTest : KoinTest {
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
-    @Test
-    fun testTexts() {
-        with(composeTestRule) {
-            onSampleScreen {
-                checkContentTextVisible()
+    @Before
+    // you can specify what should happen before every test
+    fun navigateToSampleSharedViewModel() {
 
-                checkSampleTextVisible()
+    }
+
+    @Test
+    fun basicTests() {
+        with(composeTestRule) {
+            onSampleSharedViewModelScreen {
+                checkThatLoaderIsVisible()
             }
         }
     }
 
     @Test
-    fun testButton() {
+    fun testListDisplayed() {
         with(composeTestRule) {
-            onSampleScreen {
-                checkButtonClick()
+            onSampleSharedViewModelScreen {
+                checkThatTodoListIsVisible()
             }
         }
     }

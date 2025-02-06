@@ -2,15 +2,9 @@ package kmp.shared.samplecomposenavigation.presentation.ui.test
 
 object TestTags {
 
-    object SampleScreen {
-        object SampleText : TestTag("sample_sample_text")
-    }
-
-    object SampleSharedViewModelScreen {
-        object SampleText : TestTag("shared_view_model_sample_text")
-    }
-
-    object SampleComposeMultiplatformScreen {
-        object SampleText : TestTag("compose_multiplatform_sample_text")
+    object TodoListScreen {
+        object Loader : TestTag("todo_list")
+        object TodoList : TestTag("todo_list")
+        object NoTasks : TestTag("no_tasks")
     }
 }

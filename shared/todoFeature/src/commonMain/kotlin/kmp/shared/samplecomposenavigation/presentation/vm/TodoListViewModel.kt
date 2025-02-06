@@ -18,7 +18,6 @@ class TodoListViewModel(
             TodoListIntent.OnAppeared -> {
                 loadData()
             }
-            TodoListIntent.OnBackTapped -> TODO()
             TodoListIntent.OnButtonTapped -> TODO()
         }
     }
@@ -45,7 +44,6 @@ data class TodoListState(
 sealed interface TodoListIntent : VmIntent {
     data object OnAppeared : TodoListIntent
     data object OnButtonTapped : TodoListIntent
-    data object OnBackTapped : TodoListIntent
 }
 
 sealed interface TodoListEvent : VmEvent {

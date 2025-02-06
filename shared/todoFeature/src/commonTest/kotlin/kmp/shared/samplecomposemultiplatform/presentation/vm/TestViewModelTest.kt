@@ -9,7 +9,7 @@ import kmp.shared.base.ErrorResult
 import kmp.shared.base.Result
 import kmp.shared.base.error.domain.CommonError
 import kmp.shared.samplecomposenavigation.data.source.TaskSource
-import kmp.shared.samplecomposenavigation.di.sampleComposeMultiplatformModule
+import kmp.shared.samplecomposenavigation.di.todoModuleModule
 import kmp.shared.samplecomposenavigation.domain.model.Task
 import kmp.shared.samplecomposenavigation.presentation.vm.TodoListIntent
 import kmp.shared.samplecomposenavigation.presentation.vm.TodoListViewModel
@@ -43,7 +43,7 @@ class TodoListViewModelTest : KoinTest {
         // Start Koin
         startKoin {
             modules(
-                sampleComposeMultiplatformModule,
+                todoModuleModule,
                 testModule
             )
         }

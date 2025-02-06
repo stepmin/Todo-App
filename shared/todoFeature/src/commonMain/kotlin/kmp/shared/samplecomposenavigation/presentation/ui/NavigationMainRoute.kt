@@ -2,12 +2,20 @@ package kmp.shared.samplecomposenavigation.presentation.ui
 
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import dev.icerock.moko.resources.compose.stringResource
 import kmp.shared.base.MR
 import kmp.shared.samplecomposenavigation.presentation.common.AppTheme
 import kmp.shared.samplecomposenavigation.presentation.navigation.TodoNavigationGraph
 import kmp.shared.samplecomposenavigation.presentation.navigation.composableDestination
+import kmp.shared.samplecomposenavigation.presentation.vm.TodoListEvent
+import kmp.shared.samplecomposenavigation.presentation.vm.TodoListIntent
+import kmp.shared.samplecomposenavigation.presentation.vm.TodoListViewModel
+import kotlinx.coroutines.flow.collectLatest
+import org.koin.compose.viewmodel.koinViewModel
 
 internal fun NavGraphBuilder.todoListNavigationRoute(
     onShowMessage: (String) -> Unit,
@@ -28,7 +36,7 @@ internal fun SampleComposeNavigationMainRoute(
     onShowMessage: (String) -> Unit,
     navigateToNext: () -> Unit,
 ) {
-/*    val viewModel: TodoListViewModel = koinViewModel()
+    val viewModel: TodoListViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(viewModel) {
@@ -42,7 +50,7 @@ internal fun SampleComposeNavigationMainRoute(
                 TodoListEvent.NavigateBack -> TODO()
             }
         }
-    }*/
+    }
 
     AppTheme {
         Scaffold(
@@ -52,8 +60,7 @@ internal fun SampleComposeNavigationMainRoute(
                 )
             },
         ) {
-            TodoListScreen()
-//            SampleComposeMultiplatformScreen(state = state, onIntent = viewModel::onIntent)
+            TodoListScreen(state)
         }
     }
 }

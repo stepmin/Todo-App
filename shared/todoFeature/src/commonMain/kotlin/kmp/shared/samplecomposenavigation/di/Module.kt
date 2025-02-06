@@ -14,7 +14,7 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
-val sampleComposeMultiplatformModule = module {
+val todoModuleModule = module {
     // View models
     viewModelOf(::TodoListViewModel)
 
