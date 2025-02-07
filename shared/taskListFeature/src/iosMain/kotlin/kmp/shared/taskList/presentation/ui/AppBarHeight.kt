@@ -1,4 +1,4 @@
-package kmp.shared.samplecomposenavigation.presentation.ui
+package kmp.shared.taskList.presentation.ui
 
 import androidx.compose.ui.unit.dp
 

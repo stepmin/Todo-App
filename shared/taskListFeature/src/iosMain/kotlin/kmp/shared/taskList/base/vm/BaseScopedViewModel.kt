@@ -1,4 +1,4 @@
-package kmp.shared.samplecomposenavigation.base.vm
+package kmp.shared.taskList.base.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
