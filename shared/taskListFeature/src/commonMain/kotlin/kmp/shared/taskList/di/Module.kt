@@ -15,7 +15,7 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
-val todoModuleModule = module {
+val taskListModule = module {
     // View models
     viewModelOf(::TodoListViewModel)
 

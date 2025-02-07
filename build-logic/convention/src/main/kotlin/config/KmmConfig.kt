@@ -56,6 +56,7 @@ fun KotlinMultiplatformExtension.kmm(
                 export(libs.mokoResources)
                 export(project(":shared:base"))
                 export(project(":shared:taskListFeature"))
+                export(project(":shared:taskDetailFeature"))
             }
         }
     }

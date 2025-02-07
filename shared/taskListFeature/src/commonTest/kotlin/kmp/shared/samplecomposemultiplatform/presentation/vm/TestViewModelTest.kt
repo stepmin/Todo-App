@@ -9,7 +9,7 @@ import kmp.shared.base.ErrorResult
 import kmp.shared.base.Result
 import kmp.shared.base.error.domain.CommonError
 import kmp.shared.taskList.data.source.TaskSource
-import kmp.shared.taskList.di.todoModuleModule
+import kmp.shared.taskList.di.taskListModule
 import kmp.shared.taskList.domain.model.Task
 import kmp.shared.taskList.presentation.vm.TodoListIntent
 import kmp.shared.taskList.presentation.vm.TodoListViewModel
@@ -44,7 +44,7 @@ class TodoListViewModelTest : KoinTest {
         // Start Koin
         startKoin {
             modules(
-                todoModuleModule,
+                taskListModule,
                 testModule,
             )
         }

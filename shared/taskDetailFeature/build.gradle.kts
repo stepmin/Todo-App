@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "kmp.shared.taskList"
+    namespace = "kmp.shared.taskDetail"
 }
 
 kotlin {

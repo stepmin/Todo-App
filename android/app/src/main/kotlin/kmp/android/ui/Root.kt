@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import kmp.shared.taskDetail.presentation.navigation.taskDetailNavigationNavGraph
 import kmp.shared.taskList.presentation.navigation.TodoNavigationGraph
 import kmp.shared.taskList.presentation.navigation.todoNavigationNavGraph
 
@@ -21,6 +22,13 @@ fun Root(modifier: Modifier = Modifier) {
                 startDestination = TodoNavigationGraph.rootPath,
             ) {
                 todoNavigationNavGraph(
+                    navController,
+                    onShowMessage = {
+
+                    },
+                )
+
+                taskDetailNavigationNavGraph(
                     navController,
                     onShowMessage = {
 

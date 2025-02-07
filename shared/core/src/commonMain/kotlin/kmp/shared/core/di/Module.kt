@@ -2,7 +2,8 @@ package kmp.shared.core.di
 
 import kmp.shared.auth.di.authModule
 import kmp.shared.base.di.baseModule
-import kmp.shared.taskList.di.todoModuleModule
+import kmp.shared.taskList.di.taskListModule
+import kmp.shared.taskDetail.di.taskDetailModule
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
@@ -13,7 +14,8 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}): KoinApplication {
         modules(
             baseModule,
             authModule,
-            todoModuleModule,
+            taskListModule,
+            taskDetailModule
         )
     }
 
