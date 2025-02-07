@@ -35,5 +35,5 @@ ktlint {
 
 dependencies {
     commonMainApi(project(":shared:base"))
-    commonMainApi(project(":shared:todoFeature"))
+    "commonMainApi"(project(":shared:taskListFeature"))
 }
