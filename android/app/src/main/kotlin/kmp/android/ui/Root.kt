@@ -7,8 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import kmp.shared.taskList.presentation.navigation.TodoNavigationGraph
-import kmp.shared.taskList.presentation.navigation.todoNavigationNavGraph
+import kmp.shared.todo.presentation.navigation.TodoNavigationGraph
+import kmp.shared.todo.presentation.navigation.todoNavigationNavGraph
 
 @Composable
 fun Root(modifier: Modifier = Modifier) {

@@ -4,10 +4,10 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.window.ComposeUIViewController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import kmp.shared.taskList.presentation.ui.LocalSampleComposeMultiplatformViewFactory
-import kmp.shared.taskList.presentation.ui.SampleComposeMultiplatformViewFactory
-import kmp.shared.taskList.presentation.navigation.TodoNavigationGraph
-import kmp.shared.taskList.presentation.navigation.todoNavigationNavGraph
+import kmp.shared.todo.presentation.ui.LocalSampleComposeMultiplatformViewFactory
+import kmp.shared.todo.presentation.ui.SampleComposeMultiplatformViewFactory
+import kmp.shared.todo.presentation.navigation.TodoNavigationGraph
+import kmp.shared.todo.presentation.navigation.todoNavigationNavGraph
 import platform.UIKit.UIViewController
 
 @Suppress("Unused", "FunctionName")
