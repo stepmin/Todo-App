@@ -1,6 +1,7 @@
 package kmp.shared.taskList.presentation.ui
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,12 +19,14 @@ import androidx.compose.ui.unit.sp
 import kmp.shared.taskList.domain.model.Task
 import kmp.shared.taskList.presentation.ui.test.TestTags
 import kmp.shared.taskList.presentation.ui.test.testTag
-import kmp.shared.taskList.presentation.vm.TodoListState
+import kmp.shared.taskList.presentation.vm.TaskListState
 
 @Composable
-fun TodoListScreen(
-    state: TodoListState,
+fun TaskListScreen(
+    state: TaskListState,
     modifier: Modifier = Modifier,
+    onTaskChecked: (Int) -> Unit,
+    onRowTapped: (Task) -> Unit,
 ) {
     AnimatedContent(
         modifier = modifier,
@@ -50,7 +53,12 @@ fun TodoListScreen(
                     TaskList(
                         modifier = Modifier.testTag(TestTags.TodoListScreen.TodoList),
                         tasks = state.tasks,
-                        onTaskChecked = { /* Handle check */ },
+                        onTaskChecked = {
+
+                        },
+                        onRowTapped = {
+                            onRowTapped(it)
+                        },
                     )
                 } else {
                     Text(
@@ -68,6 +76,7 @@ fun TaskList(
     modifier: Modifier = Modifier,
     tasks: List<Task>,
     onTaskChecked: (Int) -> Unit,
+    onRowTapped: (Task) -> Unit,
 ) {
     LazyColumn(modifier = modifier) {
         items(tasks.size) { it: Int ->
@@ -75,6 +84,7 @@ fun TaskList(
             TaskItem(
                 task = task,
                 onCheckedChange = { onTaskChecked(task.id) },
+                onRowTapped = { onRowTapped(task) },
             )
         }
     }
@@ -85,9 +95,13 @@ fun TaskItem(
     modifier: Modifier = Modifier,
     task: Task,
     onCheckedChange: (Boolean) -> Unit,
+    onRowTapped: (Task) -> Unit,
 ) {
     Row(
         modifier = modifier
+            .clickable {
+                onRowTapped(task)
+            }
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .testTag(TestTags.TodoListScreen.Task),

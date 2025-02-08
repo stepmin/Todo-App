@@ -12,16 +12,18 @@ import kmp.shared.taskList.domain.usecase.GetTasksUseCase
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class TodoListViewModel(
+class TaskListViewModel(
     private val getTasksData: GetTasksUseCase,
-) : BaseViewModel<TodoListState, TodoListIntent, TodoListEvent>(TodoListState()) {
+) : BaseViewModel<TaskListState, TaskListIntent, TaskListEvent>(TaskListState()) {
 
-    override suspend fun applyIntent(intent: TodoListIntent) {
+    override suspend fun applyIntent(intent: TaskListIntent) {
         when (intent) {
-            TodoListIntent.OnAppeared -> {
+            is TaskListIntent.OnAppeared -> {
                 loadData()
             }
-            TodoListIntent.OnButtonTapped -> TODO()
+            is TaskListIntent.OnButtonTapped -> {
+                _events.emit(TaskListEvent.NavigateToTaskDetail(intent.id, intent.userId))
+            }
         }
     }
 
@@ -37,7 +39,7 @@ class TodoListViewModel(
 
 }
 
-data class TodoListState(
+data class TaskListState(
     val loading: Boolean = false,
     val tasks: List<Task>? = null,
     val error: ErrorResult? = null,
@@ -45,12 +47,12 @@ data class TodoListState(
     constructor() : this(true, null, null)
 }
 
-sealed interface TodoListIntent : VmIntent {
-    data object OnAppeared : TodoListIntent
-    data object OnButtonTapped : TodoListIntent
+sealed interface TaskListIntent : VmIntent {
+    data object OnAppeared : TaskListIntent
+    data class OnButtonTapped(val id: Int, val userId: Int) : TaskListIntent
 }
 
-sealed interface TodoListEvent : VmEvent {
-    data class ShowMessage(val message: String) : TodoListEvent
-    data object NavigateBack : TodoListEvent
+sealed interface TaskListEvent : VmEvent {
+    data class ShowMessage(val message: String) : TaskListEvent
+    data class NavigateToTaskDetail(val id: Int, val userId: Int) : TaskListEvent
 }

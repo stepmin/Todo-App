@@ -11,8 +11,8 @@ import kmp.shared.base.error.domain.CommonError
 import kmp.shared.taskList.data.source.TaskSource
 import kmp.shared.taskList.di.taskListModule
 import kmp.shared.taskList.domain.model.Task
-import kmp.shared.taskList.presentation.vm.TodoListIntent
-import kmp.shared.taskList.presentation.vm.TodoListViewModel
+import kmp.shared.taskList.presentation.vm.TaskListIntent
+import kmp.shared.taskList.presentation.vm.TaskListViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -66,9 +66,9 @@ class TodoListViewModelTest : KoinTest {
             )
         }
 
-        val viewModel = get<TodoListViewModel>()
+        val viewModel = get<TaskListViewModel>()
 
-        viewModel.onIntent(TodoListIntent.OnAppeared)
+        viewModel.onIntent(TaskListIntent.OnAppeared)
 
         advanceUntilIdle()
 
@@ -83,9 +83,9 @@ class TodoListViewModelTest : KoinTest {
             )
         }
 
-        val viewModel = get<TodoListViewModel>()
+        val viewModel = get<TaskListViewModel>()
 
-        viewModel.onIntent(TodoListIntent.OnAppeared)
+        viewModel.onIntent(TaskListIntent.OnAppeared)
 
         advanceUntilIdle()
 

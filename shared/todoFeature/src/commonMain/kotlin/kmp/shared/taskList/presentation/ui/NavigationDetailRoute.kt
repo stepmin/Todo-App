@@ -1,56 +1,63 @@
 package kmp.shared.taskList.presentation.ui
 
+import TaskDetailEvent
+import TaskDetailIntent
+import TaskDetailScreen
+import TaskDetailViewModel
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import dev.icerock.moko.resources.compose.stringResource
 import kmp.shared.base.MR
 import kmp.shared.taskList.presentation.common.AppTheme
 import kmp.shared.taskList.presentation.navigation.TodoNavigationGraph
 import kmp.shared.taskList.presentation.navigation.composableDestination
-import kmp.shared.taskList.presentation.vm.TaskListEvent
-import kmp.shared.taskList.presentation.vm.TaskListIntent
-import kmp.shared.taskList.presentation.vm.TaskListViewModel
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.compose.viewmodel.koinViewModel
 
-internal fun NavGraphBuilder.taskListNavigationRoute(
+internal fun NavController.navigateToDetail(taskId: Int, userId: Int) {
+    val route = TodoNavigationGraph.TaskDetail(taskId, userId)
+    navigate(route)
+}
+
+internal fun NavGraphBuilder.taskDetailNavigationRoute(
     onShowMessage: (String) -> Unit,
-    navigateToDetail: (Int, Int) -> Unit,
 ) {
+    val destination = TodoNavigationGraph.TaskDetail
     composableDestination(
-        destination = TodoNavigationGraph.TaskList,
-    ) {
-        TodoNavigationListRoute(
+        destination = destination,
+    ) { it: NavBackStackEntry ->
+        val id = it.arguments?.getInt("id")
+        val userId = it.arguments?.getInt("userId")
+        SavedStateHandle(mapOf("id" to id, "userId" to userId))
+        TaskDetailRoute(
             onShowMessage = onShowMessage,
-            navigateToDetail = navigateToDetail,
         )
     }
 }
 
 @Composable
-internal fun TodoNavigationListRoute(
+internal fun TaskDetailRoute(
     onShowMessage: (String) -> Unit,
-    navigateToDetail: (Int, Int) -> Unit,
 ) {
-    val viewModel: TaskListViewModel = koinViewModel()
+    val viewModel: TaskDetailViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(viewModel) {
-        viewModel.onIntent(TaskListIntent.OnAppeared)
+        viewModel.onIntent(TaskDetailIntent.OnAppeared)
     }
 
     LaunchedEffect(viewModel) {
         viewModel.events.collectLatest { event ->
             when (event) {
-                is TaskListEvent.ShowMessage -> onShowMessage(event.message)
-
-                is TaskListEvent.NavigateToTaskDetail -> {
-                    navigateToDetail(event.id, event.userId)
-                }
+                TaskDetailEvent.NavigateBack -> TODO()
+                is TaskDetailEvent.ShowMessage -> TODO()
             }
         }
     }
@@ -63,15 +70,7 @@ internal fun TodoNavigationListRoute(
                 )
             },
         ) {
-            TaskListScreen(
-                state = state,
-                onTaskChecked = {
-
-                },
-                onRowTapped = {
-                    navigateToDetail(it.id, it.userId)
-                },
-            )
+            TaskDetailScreen(state)
         }
     }
 }
