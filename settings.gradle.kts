@@ -21,9 +21,6 @@ rootProject.name = "TODOapp"
 
 include(":android:app")
 include(":android:shared")
-include(":android:sample")
-include(":android:samplesharedviewmodel")
-include(":android:samplecomposemultiplatform")
 
 include(":shared:core")
 include(":shared:base")
