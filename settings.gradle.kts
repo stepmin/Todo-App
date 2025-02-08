@@ -27,5 +27,4 @@ include(":android:samplecomposemultiplatform")
 
 include(":shared:core")
 include(":shared:base")
-include(":shared:taskListFeature")
-include(":shared:taskDetailFeature")
+include(":shared:todoFeature")

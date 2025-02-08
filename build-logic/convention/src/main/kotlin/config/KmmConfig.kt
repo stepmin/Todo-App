@@ -55,8 +55,7 @@ fun KotlinMultiplatformExtension.kmm(
                 isStatic = false
                 export(libs.mokoResources)
                 export(project(":shared:base"))
-                export(project(":shared:taskListFeature"))
-                export(project(":shared:taskDetailFeature"))
+                export(project(":shared:todoFeature"))
             }
         }
     }
