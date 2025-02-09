@@ -2,7 +2,7 @@ package kmp.android.test
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import kmp.android.MainActivity
-import kmp.android.screen.onSampleSharedViewModelScreen
+import kmp.android.screen.onTaskListScreen
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.BeforeClass
@@ -10,7 +10,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.koin.test.KoinTest
 
-internal class TodoListScreenTest : KoinTest {
+internal class TaskListScreenTest : KoinTest {
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
@@ -24,7 +24,7 @@ internal class TodoListScreenTest : KoinTest {
     @Test
     fun basicTests() {
         with(composeTestRule) {
-            onSampleSharedViewModelScreen {
+            onTaskListScreen {
                 checkThatLoaderIsVisible()
             }
         }
@@ -33,8 +33,8 @@ internal class TodoListScreenTest : KoinTest {
     @Test
     fun testListDisplayed() {
         with(composeTestRule) {
-            onSampleSharedViewModelScreen {
-                checkTodoList()
+            onTaskListScreen {
+                checkTaskList()
             }
         }
     }

@@ -2,8 +2,6 @@
 
 package kmp.shared.todo.presentation.vm
 
-import TaskDetailIntent
-import TaskDetailViewModel
 import dev.mokkery.answering.calls
 import dev.mokkery.everySuspend
 import dev.mokkery.mock
@@ -12,6 +10,7 @@ import kmp.shared.base.error.domain.CommonError
 import kmp.shared.todo.data.source.TodoSource
 import kmp.shared.todo.di.sharedTasksModule
 import kmp.shared.todo.di.taskDetailModule
+import kmp.shared.todo.domain.model.DetailRequest
 import kmp.shared.todo.domain.model.TaskDetail
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -63,7 +62,7 @@ class TaskDetailViewModelTest : KoinTest {
             email = "username@zzz.cz",
         )
 
-        everySuspend { sourceMock.getTaskDetail() } calls {
+        everySuspend { sourceMock.getTaskDetail(DetailRequest(5, 5)) } calls {
             Result.Success(data)
         }
 
@@ -78,7 +77,7 @@ class TaskDetailViewModelTest : KoinTest {
 
         val expectedError = CommonError.NetworkConnectionError(RuntimeException(""))
 
-        everySuspend { sourceMock.getTaskDetail() } calls {
+        everySuspend { sourceMock.getTaskDetail(DetailRequest(5, 5)) } calls {
             Result.Error(expectedError)
         }
 

@@ -2,6 +2,7 @@ package kmp.shared.todo.presentation.ui
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,7 +35,14 @@ fun TaskListScreen(
         label = "AnimatedLoading",
     ) { loading ->
         if (loading) {
-            CircularProgressIndicator()
+            Box(
+                modifier = Modifier
+                    .testTag(TestTags.TaskDetailScreen.Loader)
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator()
+            }
         } else {
             Column(
                 modifier = modifier
@@ -51,7 +59,7 @@ fun TaskListScreen(
                 if (state.tasks?.isNotEmpty() == true) {
                     // Task List
                     TaskList(
-                        modifier = Modifier.testTag(TestTags.TodoListScreen.TodoList),
+                        modifier = Modifier.testTag(TestTags.TaskListScreen.List),
                         tasks = state.tasks,
                         onTaskChecked = {
 
@@ -63,7 +71,7 @@ fun TaskListScreen(
                 } else {
                     Text(
                         text = "No tasks",
-                        modifier = Modifier.testTag(TestTags.TodoListScreen.NoTasks),
+                        modifier = Modifier.testTag(TestTags.TaskListScreen.NoTasks),
                     )
                 }
             }
@@ -104,7 +112,7 @@ fun TaskItem(
             }
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .testTag(TestTags.TodoListScreen.Task),
+            .testTag(TestTags.TaskListScreen.Task),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Checkbox(

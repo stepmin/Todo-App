@@ -1,9 +1,8 @@
 package kmp.shared.todo.presentation.ui
 
-import TaskDetailEvent
-import TaskDetailIntent
-import TaskDetailScreen
-import TaskDetailViewModel
+import kmp.shared.todo.presentation.vm.TaskDetailEvent
+import kmp.shared.todo.presentation.vm.TaskDetailIntent
+import kmp.shared.todo.presentation.vm.TaskDetailViewModel
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -63,14 +62,8 @@ internal fun TaskDetailRoute(
     }
 
     AppTheme {
-        Scaffold(
-            topBar = {
-                CenterAlignedTopAppBar(
-                    title = stringResource(MR.strings.bottom_bar_item_4),
-                )
-            },
-        ) {
-            TaskDetailScreen(state)
+        TaskDetailScreen(state) {
+            viewModel.onIntent(TaskDetailIntent.OnCompletedTapped(it))
         }
     }
 }

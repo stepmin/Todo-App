@@ -2,6 +2,7 @@ package kmp.shared.todo.data.repository
 
 import kmp.shared.base.Result
 import kmp.shared.todo.data.source.TodoSource
+import kmp.shared.todo.domain.model.DetailRequest
 import kmp.shared.todo.domain.model.Task
 import kmp.shared.todo.domain.model.TaskDetail
 import kmp.shared.todo.domain.repository.TasksRepository
@@ -12,6 +13,6 @@ internal class TasksRepositoryImpl(
 ) : TasksRepository {
 
     override fun getTaskList(): Flow<Result<List<Task>>> = source.observeTasks()
-    override suspend fun getTaskDetail(): Result<TaskDetail> = source.getTaskDetail()
+    override suspend fun getTaskDetail(detailRequest: DetailRequest): Result<TaskDetail> = source.getTaskDetail(detailRequest)
 
 }

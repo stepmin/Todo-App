@@ -1,6 +1,6 @@
 package kmp.shared.todo.di
 
-import TaskDetailViewModel
+import kmp.shared.todo.presentation.vm.TaskDetailViewModel
 import kmp.shared.todo.data.repository.TasksRepositoryImpl
 import kmp.shared.todo.data.source.TodoSource
 import kmp.shared.todo.domain.repository.TasksRepository

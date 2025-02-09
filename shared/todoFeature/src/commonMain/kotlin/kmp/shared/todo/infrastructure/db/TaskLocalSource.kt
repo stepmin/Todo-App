@@ -1,7 +1,6 @@
 package kmp.shared.todo.infrastructure.db
 
 import kmp.shared.base.Result
-import kmp.shared.base.error.util.runCatchingCommonNetworkExceptions
 import kmp.shared.todo.domain.model.Task
 
 class TaskLocalSource {

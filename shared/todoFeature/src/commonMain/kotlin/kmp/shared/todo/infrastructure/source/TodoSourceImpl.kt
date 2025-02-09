@@ -3,6 +3,7 @@ package kmp.shared.todo.infrastructure.source
 import kmp.shared.base.Result
 import kmp.shared.base.error.domain.CommonError
 import kmp.shared.todo.data.source.TodoSource
+import kmp.shared.todo.domain.model.DetailRequest
 import kmp.shared.todo.domain.model.Task
 import kmp.shared.todo.domain.model.TaskDetail
 import kmp.shared.todo.infrastructure.db.TaskLocalSource
@@ -31,7 +32,7 @@ internal class TodoSourceImpl(
             }
         }
 
-    override suspend fun getTaskDetail(): Result<TaskDetail> {
-        return taskService.getTaskDetail()
+    override suspend fun getTaskDetail(detailRequest: DetailRequest): Result<TaskDetail> {
+        return taskService.getTaskDetail(detailRequest)
     }
 }

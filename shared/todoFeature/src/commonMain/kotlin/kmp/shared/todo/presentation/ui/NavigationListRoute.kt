@@ -1,13 +1,10 @@
 package kmp.shared.todo.presentation.ui
 
-import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
-import dev.icerock.moko.resources.compose.stringResource
-import kmp.shared.base.MR
 import kmp.shared.todo.presentation.common.AppTheme
 import kmp.shared.todo.presentation.navigation.TodoNavigationGraph
 import kmp.shared.todo.presentation.navigation.composableDestination
@@ -56,22 +53,14 @@ internal fun TodoNavigationListRoute(
     }
 
     AppTheme {
-        Scaffold(
-            topBar = {
-                CenterAlignedTopAppBar(
-                    title = stringResource(MR.strings.bottom_bar_item_4),
-                )
-            },
-        ) {
-            TaskListScreen(
-                state = state,
-                onTaskChecked = {
+        TaskListScreen(
+            state = state,
+            onTaskChecked = {
 
-                },
-                onRowTapped = {
-                    navigateToDetail(it.id, it.userId)
-                },
-            )
-        }
+            },
+            onRowTapped = {
+                navigateToDetail(it.id, it.userId)
+            },
+        )
     }
 }

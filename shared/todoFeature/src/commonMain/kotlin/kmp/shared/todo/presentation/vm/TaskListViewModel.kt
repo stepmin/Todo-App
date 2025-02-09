@@ -9,6 +9,7 @@ import kmp.shared.todo.base.vm.VmIntent
 import kmp.shared.todo.base.vm.VmState
 import kmp.shared.todo.domain.model.Task
 import kmp.shared.todo.domain.usecase.GetTasksUseCase
+import kmp.shared.todo.presentation.vm.TaskListEvent.*
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -16,13 +17,20 @@ class TaskListViewModel(
     private val getTasksData: GetTasksUseCase,
 ) : BaseViewModel<TaskListState, TaskListIntent, TaskListEvent>(TaskListState()) {
 
+    init {
+        onIntent(TaskListIntent.OnInit)
+    }
+
     override suspend fun applyIntent(intent: TaskListIntent) {
         when (intent) {
-            is TaskListIntent.OnAppeared -> {
+            is TaskListIntent.OnInit -> {
                 loadData()
             }
+            TaskListIntent.OnAppeared -> {
+
+            }
             is TaskListIntent.OnButtonTapped -> {
-                _events.emit(TaskListEvent.NavigateToTaskDetail(intent.id, intent.userId))
+                _events.emit(NavigateToTaskDetail(intent.id, intent.userId))
             }
         }
     }
@@ -48,6 +56,7 @@ data class TaskListState(
 }
 
 sealed interface TaskListIntent : VmIntent {
+    data object OnInit : TaskListIntent
     data object OnAppeared : TaskListIntent
     data class OnButtonTapped(val id: Int, val userId: Int) : TaskListIntent
 }

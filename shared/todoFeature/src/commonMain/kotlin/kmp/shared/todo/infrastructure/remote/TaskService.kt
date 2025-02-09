@@ -5,6 +5,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kmp.shared.base.Result
 import kmp.shared.base.error.util.runCatchingCommonNetworkExceptions
+import kmp.shared.todo.domain.model.DetailRequest
 import kmp.shared.todo.domain.model.Task
 import kmp.shared.todo.domain.model.TaskDetail
 import kmp.shared.todo.infrastructure.model.TaskDetailDto
@@ -21,14 +22,14 @@ internal class TaskService(private val client: HttpClient) {
         }
     }
 
-    suspend fun getTaskDetail(): Result<TaskDetail> = runCatchingCommonNetworkExceptions {
+    suspend fun getTaskDetail(detailRequest: DetailRequest): Result<TaskDetail> = runCatchingCommonNetworkExceptions {
         coroutineScope {
             val taskDetailResponse = async {
-                val taskId = 1
+                val taskId = detailRequest.id
                 client.get("$ROOT_PATH_TODOS/$taskId") {}.body<TaskDetailDto>()
             }
             val userDetailResponse = async {
-                val userId = 1
+                val userId = detailRequest.userId
                 client.get("$ROOT_PATH_USERS/$userId").body<UserDetailDto>()
             }
 

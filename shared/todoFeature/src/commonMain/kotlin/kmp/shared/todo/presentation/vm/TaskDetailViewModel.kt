@@ -1,9 +1,12 @@
+package kmp.shared.todo.presentation.vm
+
 import kmp.shared.base.ErrorResult
 import kmp.shared.base.Result
 import kmp.shared.todo.base.vm.BaseViewModel
 import kmp.shared.todo.base.vm.VmEvent
 import kmp.shared.todo.base.vm.VmIntent
 import kmp.shared.todo.base.vm.VmState
+import kmp.shared.todo.domain.model.DetailRequest
 import kmp.shared.todo.domain.model.TaskDetail
 import kmp.shared.todo.domain.usecase.GetTaskDetailUseCase
 
@@ -15,12 +18,17 @@ class TaskDetailViewModel(
     override suspend fun applyIntent(intent: TaskDetailIntent) {
         when (intent) {
             TaskDetailIntent.OnAppeared -> {
-                loadData(Pair(1, 1))
+                //TODO-real call
+                loadData(DetailRequest(5, 5))
+            }
+
+            is TaskDetailIntent.OnCompletedTapped -> {
+                markAsCompleted(intent.id)
             }
         }
     }
 
-    private suspend fun loadData(input: Pair<Int, Int>) {
+    private suspend fun loadData(input: DetailRequest) {
         update { copy(loading = true) }
         when (val taskDetailUseCase = getTaskDetailUseCase(input)) {
             is Result.Success -> {
@@ -45,6 +53,7 @@ data class TaskDetailState(
 
 sealed interface TaskDetailIntent : VmIntent {
     data object OnAppeared : TaskDetailIntent
+    data class OnCompletedTapped(val id: Int) : TaskDetailIntent
 }
 
 sealed interface TaskDetailEvent : VmEvent {
