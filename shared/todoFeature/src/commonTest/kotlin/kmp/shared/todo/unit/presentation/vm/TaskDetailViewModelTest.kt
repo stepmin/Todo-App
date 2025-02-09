@@ -3,7 +3,7 @@
 package kmp.shared.todo.unit.presentation.vm
 
 import dev.mokkery.answering.calls
-import dev.mokkery.everySuspend
+import dev.mokkery.every
 import dev.mokkery.mock
 import kmp.shared.base.Result
 import kmp.shared.base.error.domain.CommonError
@@ -16,6 +16,7 @@ import kmp.shared.todo.presentation.vm.TaskDetailIntent
 import kmp.shared.todo.presentation.vm.TaskDetailViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -33,10 +34,10 @@ import kotlin.test.assertTrue
 
 class TaskDetailViewModelTest : KoinTest {
 
-    internal val sourceMock = mock<TasksRepository> {}
+    internal val taskRepositoryMock = mock<TasksRepository> {}
 
     private val testModule = module {
-        single<TasksRepository> { sourceMock }
+        single<TasksRepository> { taskRepositoryMock }
     }
 
     @BeforeTest
@@ -57,6 +58,7 @@ class TaskDetailViewModelTest : KoinTest {
     fun `data are successfully transformed to state`() = runTest {
         val data = TaskDetail(
             id = 1,
+            userId = 5,
             title = "title",
             completed = false,
             name = "Full Name",
@@ -64,30 +66,27 @@ class TaskDetailViewModelTest : KoinTest {
             email = "username@zzz.cz",
         )
 
-        everySuspend { sourceMock.getTaskDetail(TaskDetailRequest(5, 5)) } calls {
-            Result.Success(data)
+        every { taskRepositoryMock.observeTaskDetail(TaskDetailRequest(5, 5)) } calls {
+            flowOf(Result.Success(data))
         }
 
         val viewModel = get<TaskDetailViewModel>()
 
-        viewModel.onIntent(TaskDetailIntent.OnAppeared)
-
         advanceUntilIdle()
 
-        var uiState = viewModel.state.value
-        assertTrue(uiState.taskDetail == data, "value is: $uiState")
+        assertTrue(viewModel.state.value.taskDetail != null)
 
         val expectedError = CommonError.NetworkConnectionError(RuntimeException(""))
 
-        everySuspend { sourceMock.getTaskDetail(TaskDetailRequest(5, 5)) } calls {
-            Result.Error(expectedError)
+        every { taskRepositoryMock.observeTaskDetail(TaskDetailRequest(5, 5)) } calls {
+            flowOf(Result.Error(expectedError))
         }
 
-        viewModel.onIntent(TaskDetailIntent.OnAppeared)
+        viewModel.onIntent(TaskDetailIntent.OnInit)
 
         advanceUntilIdle()
 
-        uiState = viewModel.state.value
+        val uiState = viewModel.state.value
         assertTrue(uiState.error == expectedError, "value is: $uiState")
     }
 

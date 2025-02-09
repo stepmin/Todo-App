@@ -2,6 +2,7 @@ package kmp.shared.base.infrastructure.remote
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.authProviders
 import io.ktor.client.plugins.auth.providers.BearerAuthProvider
@@ -34,6 +35,12 @@ internal object HttpClient {
 
         install(ContentNegotiation) {
             json(globalJson)
+        }
+
+        install(HttpTimeout) {
+            connectTimeoutMillis = 10_000
+            requestTimeoutMillis = 10_000
+            socketTimeoutMillis = 10_000
         }
 
         if (!config.isRelease) {

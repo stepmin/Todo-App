@@ -8,13 +8,15 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
+import kmp.shared.base.infrastructure.db.entities.TaskDetailEntity
 import kmp.shared.base.infrastructure.db.entities.TaskEntity
 import kotlinx.coroutines.flow.Flow
 
-@Database(entities = [TaskEntity::class], version = 1)
+@Database(entities = [TaskEntity::class, TaskDetailEntity::class], version = 1)
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun getTodoDao(): TodoDao
+    abstract fun getTaskListDao(): TodoDao
+    abstract fun getTaskDetailDao(): TaskDetailDao
 }
 
 // The Room compiler generates the `actual` implementations.
@@ -31,16 +33,25 @@ interface TodoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(items: List<TaskEntity>)
 
-    @Query("SELECT count(*) FROM tasks_table")
+    @Query("SELECT count(*) FROM tasks")
     suspend fun count(): Int
 
-    @Query("SELECT * FROM tasks_table")
+    @Query("SELECT * FROM tasks")
     fun observerTasks(): Flow<List<TaskEntity>>
 
-    @Query("SELECT * FROM tasks_table")
+    @Query("SELECT * FROM tasks")
     suspend fun getAll(): List<TaskEntity>
 
-    @Query("DELETE FROM tasks_table")
+    @Query("DELETE FROM tasks")
     suspend fun deleteAll()
+}
+
+@Dao
+interface TaskDetailDao {
+    @Query("SELECT * FROM task_detail WHERE id = :taskId AND userId = :userId")
+    fun getTaskDetail(taskId: Int, userId: Int): TaskDetailEntity
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun saveTaskDetail(detail: TaskDetailEntity)
 
 }

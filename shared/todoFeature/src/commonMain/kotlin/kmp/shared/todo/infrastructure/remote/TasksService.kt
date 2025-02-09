@@ -43,6 +43,7 @@ internal class TasksServiceImpl(private val client: HttpClient) : TasksService {
 
             TaskDetail(
                 id = taskDetailDto.id,
+                userId = taskDetailDto.userId,
                 title = taskDetailDto.title,
                 completed = taskDetailDto.completed,
                 name = userDetailDto.name,

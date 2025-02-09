@@ -62,6 +62,7 @@ fun TaskDetailPreview() = AppTheme {
         loading = false,
         taskDetail = TaskDetail(
             id = 1,
+            userId = 1,
             title = "Go to the gym",
             completed = true,
             name = "John Doe",

@@ -55,16 +55,13 @@ class TaskListViewModelTest : KoinTest {
 
     @Test
     fun `data are successfully transformed to state`() = runTest {
+        val data = listOf<Task>(
+            Task(id = 1, userId = 5, title = "title", completed = false),
+            Task(id = 2, userId = 5, title = "title", completed = false),
+            Task(id = 3, userId = 5, title = "title", completed = false),
+        )
         every { sourceMock.observeTasks() } calls {
-            flowOf(
-                Result.Success(
-                    listOf<Task>(
-                        Task(id = 1, userId = 5, title = "title", completed = false),
-                        Task(id = 2, userId = 5, title = "title", completed = false),
-                        Task(id = 3, userId = 5, title = "title", completed = false),
-                    ),
-                ),
-            )
+            flowOf(Result.Success(data))
         }
 
         val viewModel = get<TaskListViewModel>()
@@ -72,6 +69,7 @@ class TaskListViewModelTest : KoinTest {
         advanceUntilIdle()
 
         assertTrue(viewModel.state.value.tasks?.size == 3)
+        assertTrue(viewModel.state.value.tasks == data)
     }
 
     @Test

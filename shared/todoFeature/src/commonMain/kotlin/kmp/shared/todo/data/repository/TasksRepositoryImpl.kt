@@ -4,11 +4,10 @@ import kmp.shared.base.Result
 import kmp.shared.base.error.domain.CommonError
 import kmp.shared.todo.data.source.TasksLocalSource
 import kmp.shared.todo.data.source.TasksRemoteSource
-import kmp.shared.todo.domain.model.TaskDetailRequest
 import kmp.shared.todo.domain.model.Task
 import kmp.shared.todo.domain.model.TaskDetail
+import kmp.shared.todo.domain.model.TaskDetailRequest
 import kmp.shared.todo.domain.repository.TasksRepository
-import kmp.shared.todo.domain.usecase.TaskId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -30,15 +29,25 @@ internal class TasksRepositoryImpl(
             }
             emit(remoteTasks)
         } catch (e: Exception) {
-            println("Exception: $e")
+            println("exception when observing tasks: $e")
             emit(Result.Error(CommonError.NetworkConnectionError(e)))
         }
     }
 
-    override suspend fun getTaskDetail(taskDetailRequest: TaskDetailRequest): Result<TaskDetail> = remoteSource.getTaskDetail(taskDetailRequest)
-
-    override suspend fun changeTaskState(taskId: TaskId): Result<Boolean> {
-        return remoteSource.changeTaskState(taskId)
+    override fun observeTaskDetail(taskDetailRequest: TaskDetailRequest): Flow<Result<TaskDetail>> = flow {
+        try {
+            val localData = localSource.getTaskDetail(taskDetailRequest)
+            if (localData is Result.Success) {
+                emit(localData)
+            }
+            val remoteTaskDetail = remoteSource.getTaskDetail(taskDetailRequest)
+            if (remoteTaskDetail is Result.Success) {
+                localSource.saveTaskDetail(remoteTaskDetail.data)
+            }
+            emit(remoteTaskDetail)
+        } catch (e: Exception) {
+            println("exception when observing task detail: $e")
+            emit(Result.Error(CommonError.NetworkConnectionError(e)))
+        }
     }
-
 }

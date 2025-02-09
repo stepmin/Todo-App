@@ -4,13 +4,11 @@ import kmp.shared.todo.data.repository.TasksRepositoryImpl
 import kmp.shared.todo.data.source.TasksLocalSource
 import kmp.shared.todo.data.source.TasksRemoteSource
 import kmp.shared.todo.domain.repository.TasksRepository
-import kmp.shared.todo.domain.usecase.ChangeTaskStateUseCase
-import kmp.shared.todo.domain.usecase.ChangeTaskStateUseCaseImpl
 import kmp.shared.todo.domain.usecase.GetTaskDetailUseCase
 import kmp.shared.todo.domain.usecase.GetTaskDetailUseCaseImpl
 import kmp.shared.todo.domain.usecase.GetTasksUseCase
 import kmp.shared.todo.domain.usecase.GetTasksUseCaseImpl
-import kmp.shared.todo.infrastructure.db.TaskLocalSourceImpl
+import kmp.shared.todo.infrastructure.db.TasksLocalSourceImpl
 import kmp.shared.todo.infrastructure.remote.TasksService
 import kmp.shared.todo.infrastructure.remote.TasksServiceImpl
 import kmp.shared.todo.infrastructure.source.TasksRemoteSourceImpl
@@ -33,7 +31,7 @@ val sharedTodoModule = module {
     singleOf(::TasksServiceImpl) bind TasksService::class
 
     // db
-    singleOf(::TaskLocalSourceImpl) bind TasksLocalSource::class
+    singleOf(::TasksLocalSourceImpl) bind TasksLocalSource::class
 }
 
 val taskListModule = module {
@@ -42,7 +40,6 @@ val taskListModule = module {
 
     // Use cases
     factoryOf(::GetTasksUseCaseImpl) bind GetTasksUseCase::class
-    factoryOf(::ChangeTaskStateUseCaseImpl) bind ChangeTaskStateUseCase::class
 }
 
 val taskDetailModule = module {
