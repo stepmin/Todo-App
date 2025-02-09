@@ -7,8 +7,8 @@ import kmp.shared.todo.base.vm.BaseViewModel
 import kmp.shared.todo.base.vm.VmEvent
 import kmp.shared.todo.base.vm.VmIntent
 import kmp.shared.todo.base.vm.VmState
-import kmp.shared.todo.domain.model.TaskDetailRequest
-import kmp.shared.todo.domain.model.TaskDetail
+import kmp.shared.todo.domain.model.Task
+import kmp.shared.todo.domain.usecase.TaskId
 import kmp.shared.todo.domain.usecase.GetTaskDetailUseCase
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -25,7 +25,7 @@ class TaskDetailViewModel(
     override suspend fun applyIntent(intent: TaskDetailIntent) {
         when (intent) {
             TaskDetailIntent.OnInit -> {
-                loadData(TaskDetailRequest(5, 1))
+                loadData(5)
             }
 
             TaskDetailIntent.OnAppeared -> {
@@ -37,7 +37,7 @@ class TaskDetailViewModel(
         }
     }
 
-    private suspend fun loadData(input: TaskDetailRequest) {
+    private suspend fun loadData(input: TaskId) {
         update { copy(loading = true) }
         getTaskDetailUseCase(input).onEach { result ->
             when (result) {
@@ -56,7 +56,7 @@ class TaskDetailViewModel(
 
 data class TaskDetailState(
     val loading: Boolean = false,
-    val taskDetail: TaskDetail? = null,
+    val taskDetail: Task? = null,
     val error: ErrorResult? = null,
 ) : VmState {
     constructor() : this(true, null, null)

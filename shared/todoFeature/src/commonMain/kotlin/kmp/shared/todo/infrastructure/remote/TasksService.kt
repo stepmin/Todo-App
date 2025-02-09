@@ -9,18 +9,14 @@ import io.ktor.http.HttpStatusCode
 import kmp.shared.base.Result
 import kmp.shared.base.error.util.runCatchingCommonNetworkExceptions
 import kmp.shared.todo.domain.model.Task
-import kmp.shared.todo.domain.model.TaskDetail
-import kmp.shared.todo.domain.model.TaskDetailRequest
-import kmp.shared.todo.infrastructure.model.TaskDetailDto
+import kmp.shared.todo.domain.usecase.TaskId
 import kmp.shared.todo.infrastructure.model.TaskDto
 import kmp.shared.todo.domain.model.TaskPatch
-import kmp.shared.todo.infrastructure.model.UserDetailDto
-import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
 interface TasksService {
     suspend fun getAllTasks(): Result<List<Task>>
-    suspend fun getTaskDetail(taskDetailRequest: TaskDetailRequest): Result<TaskDetail>
+    suspend fun getTask(taskDetailRequest: TaskId): Result<Task>
     suspend fun changeTaskState(taskId: TaskPatch): Result<Boolean>
 }
 
@@ -32,28 +28,15 @@ internal class TasksServiceImpl(private val client: HttpClient) : TasksService {
         }
     }
 
-    override suspend fun getTaskDetail(taskDetailRequest: TaskDetailRequest): Result<TaskDetail> = runCatchingCommonNetworkExceptions {
+    override suspend fun getTask(taskId: TaskId): Result<Task> = runCatchingCommonNetworkExceptions {
         coroutineScope {
-            val taskDetailResponse = async {
-                val taskId = taskDetailRequest.id
-                client.get("$ROOT_PATH_TODOS/$taskId") {}.body<TaskDetailDto>()
-            }
-            val userDetailResponse = async {
-                val userId = taskDetailRequest.userId
-                client.get("$ROOT_PATH_USERS/$userId").body<UserDetailDto>()
-            }
+            val task = client.get("$ROOT_PATH_TODOS/$taskId") {}.body<TaskDto>()
 
-            val taskDetailDto = taskDetailResponse.await()
-            val userDetailDto = userDetailResponse.await()
-
-            TaskDetail(
-                id = taskDetailDto.id,
-                userId = taskDetailDto.userId,
-                title = taskDetailDto.title,
-                completed = taskDetailDto.completed,
-                name = userDetailDto.name,
-                username = userDetailDto.username,
-                email = userDetailDto.email,
+            Task(
+                id = task.id,
+                userId = task.userId,
+                title = task.title,
+                completed = task.completed,
             )
         }
 
@@ -64,8 +47,8 @@ internal class TasksServiceImpl(private val client: HttpClient) : TasksService {
             setBody(
                 TaskPatch(
                     id = task.id,
-                    completed = task.completed
-                )
+                    completed = task.completed,
+                ),
             )
         }.status == HttpStatusCode.OK
     }

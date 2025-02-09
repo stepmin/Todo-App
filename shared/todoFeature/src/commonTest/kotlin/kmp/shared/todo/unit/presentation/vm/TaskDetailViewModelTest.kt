@@ -9,8 +9,7 @@ import kmp.shared.base.Result
 import kmp.shared.base.error.domain.CommonError
 import kmp.shared.todo.di.sharedTodoModule
 import kmp.shared.todo.di.taskDetailModule
-import kmp.shared.todo.domain.model.TaskDetailRequest
-import kmp.shared.todo.domain.model.TaskDetail
+import kmp.shared.todo.domain.model.Task
 import kmp.shared.todo.domain.repository.TasksRepository
 import kmp.shared.todo.presentation.vm.TaskDetailIntent
 import kmp.shared.todo.presentation.vm.TaskDetailViewModel
@@ -56,17 +55,14 @@ class TaskDetailViewModelTest : KoinTest {
 
     @Test
     fun `data are successfully transformed to state`() = runTest {
-        val data = TaskDetail(
+        val data = Task(
             id = 1,
             userId = 5,
             title = "title",
             completed = false,
-            name = "Full Name",
-            username = "Username",
-            email = "username@zzz.cz",
         )
 
-        every { taskRepositoryMock.observeTaskDetail(TaskDetailRequest(5, 5)) } calls {
+        every { taskRepositoryMock.observeTaskDetail(5) } calls {
             flowOf(Result.Success(data))
         }
 
@@ -78,7 +74,7 @@ class TaskDetailViewModelTest : KoinTest {
 
         val expectedError = CommonError.NetworkConnectionError(RuntimeException(""))
 
-        every { taskRepositoryMock.observeTaskDetail(TaskDetailRequest(5, 5)) } calls {
+        every { taskRepositoryMock.observeTaskDetail(5) } calls {
             flowOf(Result.Error(expectedError))
         }
 
