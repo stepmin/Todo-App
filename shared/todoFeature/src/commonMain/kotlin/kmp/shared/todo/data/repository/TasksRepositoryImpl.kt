@@ -7,6 +7,7 @@ import kmp.shared.todo.data.source.TasksRemoteSource
 import kmp.shared.todo.domain.model.Task
 import kmp.shared.todo.domain.model.TaskDetail
 import kmp.shared.todo.domain.model.TaskDetailRequest
+import kmp.shared.todo.domain.model.TaskPatch
 import kmp.shared.todo.domain.repository.TasksRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -49,5 +50,13 @@ internal class TasksRepositoryImpl(
             println("exception when observing task detail: $e")
             emit(Result.Error(CommonError.NetworkConnectionError(e)))
         }
+    }
+
+    override suspend fun changeTaskState(task: Task): Result<Boolean> {
+        val changeTaskState = remoteSource.changeTaskState(TaskPatch(id = task.id, completed = task.completed))
+        if (changeTaskState is Result.Success) {
+            localSource.saveOneTask(task)
+        }
+        return changeTaskState
     }
 }

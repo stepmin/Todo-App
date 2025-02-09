@@ -7,10 +7,10 @@ import androidx.room.PrimaryKey
 data class TaskDetailEntity(
     @PrimaryKey
     val id: Int,
-    val userId: Int,
-    val title: String,
+    val userId: Int? = null,
+    val title: String? = null,
     val completed: Boolean = false,
-    val name: String,
-    val userName: String,
-    val email: String,
+    val name: String? = null,
+    val userName: String? = null,
+    val email: String? = null,
 )

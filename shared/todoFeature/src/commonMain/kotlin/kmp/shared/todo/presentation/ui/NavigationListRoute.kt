@@ -10,6 +10,7 @@ import kmp.shared.todo.presentation.navigation.TodoNavigationGraph
 import kmp.shared.todo.presentation.navigation.composableDestination
 import kmp.shared.todo.presentation.vm.TaskListEvent
 import kmp.shared.todo.presentation.vm.TaskListIntent
+import kmp.shared.todo.presentation.vm.TaskListIntent.OnTaskCheckTapped
 import kmp.shared.todo.presentation.vm.TaskListViewModel
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.compose.viewmodel.koinViewModel
@@ -46,7 +47,7 @@ internal fun TodoNavigationListRoute(
                 is TaskListEvent.ShowMessage -> onShowMessage(event.message)
 
                 is TaskListEvent.NavigateToTaskDetail -> {
-                    navigateToDetail(event.id, event.userId)
+                    navigateToDetail(event.taskId, event.userId)
                 }
             }
         }
@@ -56,7 +57,7 @@ internal fun TodoNavigationListRoute(
         TaskListScreen(
             state = state,
             onTaskChecked = {
-
+                viewModel.onIntent(OnTaskCheckTapped(it))
             },
             onRowTapped = {
                 navigateToDetail(it.id, it.userId)

@@ -26,7 +26,7 @@ import kmp.shared.todo.presentation.vm.TaskListState
 fun TaskListScreen(
     state: TaskListState,
     modifier: Modifier = Modifier,
-    onTaskChecked: (Int) -> Unit,
+    onTaskChecked: (Task) -> Unit,
     onRowTapped: (Task) -> Unit,
 ) {
     AnimatedContent(
@@ -62,7 +62,7 @@ fun TaskListScreen(
                         modifier = Modifier.testTag(TestTags.TaskListScreen.List),
                         tasks = state.tasks,
                         onTaskChecked = {
-
+                            onTaskChecked(it)
                         },
                         onRowTapped = {
                             onRowTapped(it)
@@ -83,7 +83,7 @@ fun TaskListScreen(
 fun TaskList(
     modifier: Modifier = Modifier,
     tasks: List<Task>,
-    onTaskChecked: (Int) -> Unit,
+    onTaskChecked: (Task) -> Unit,
     onRowTapped: (Task) -> Unit,
 ) {
     LazyColumn(modifier = modifier) {
@@ -91,7 +91,7 @@ fun TaskList(
             val task = tasks[it]
             TaskItem(
                 task = task,
-                onCheckedChange = { onTaskChecked(task.id) },
+                onCheckedChange = { onTaskChecked(it) },
                 onRowTapped = { onRowTapped(task) },
             )
         }
@@ -102,7 +102,7 @@ fun TaskList(
 fun TaskItem(
     modifier: Modifier = Modifier,
     task: Task,
-    onCheckedChange: (Boolean) -> Unit,
+    onCheckedChange: (Task) -> Unit,
     onRowTapped: (Task) -> Unit,
 ) {
     Row(
@@ -117,7 +117,8 @@ fun TaskItem(
     ) {
         Checkbox(
             checked = task.completed,
-            onCheckedChange = { onCheckedChange(it) },
+            onCheckedChange = { onCheckedChange(task.copy(completed = !task.completed)) },
+//            onCheckedChange = { onCheckedChange(task) },
         )
         Text(
             text = task.title,

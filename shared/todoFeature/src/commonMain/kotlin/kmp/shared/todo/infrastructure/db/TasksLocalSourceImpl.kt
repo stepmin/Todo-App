@@ -45,14 +45,33 @@ class TasksLocalSourceImpl(
             val items = value.map {
                 TaskEntity(it.id, it.userId, it.title, it.completed)
             }
-            println("items size: ${items.size}")
             withContext(Dispatchers.IO) {
                 database.getTaskListDao().insertAll(items)
             }
             Result.Success(true)
         } catch (e: Exception) {
             println("exception when saving tasks: $e")
-            //TODO-specify execption
+            //TODO-specify exception
+            Result.Error(CommonError.Unknown)
+        }
+    }
+
+    override suspend fun saveOneTask(value: Task): Result<Boolean> {
+        return try {
+            withContext(Dispatchers.IO) {
+                println("completed: ${value.completed}")
+                database.getTaskListDao().insert(
+                    TaskEntity(
+                        id = value.id,
+                        userId = value.userId,
+                        title = value.title,
+                        completed = value.completed,
+                    )
+                )
+            }
+            Result.Success(true)
+        } catch (e: Exception) {
+            println("exception when saving tasks: $e")
             Result.Error(CommonError.Unknown)
         }
     }
