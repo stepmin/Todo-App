@@ -1,4 +1,4 @@
-package kmp.shared.base.infrastucture.provider
+package kmp.shared.base.infrastructure.provider
 
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set

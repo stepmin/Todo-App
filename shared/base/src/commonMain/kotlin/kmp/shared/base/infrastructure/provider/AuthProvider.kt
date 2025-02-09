@@ -1,4 +1,4 @@
-package kmp.shared.base.infrastucture.provider
+package kmp.shared.base.infrastructure.provider
 
 interface AuthProvider {
     var token: String?
