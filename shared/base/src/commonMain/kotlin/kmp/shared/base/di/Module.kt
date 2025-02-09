@@ -1,9 +1,9 @@
 package kmp.shared.base.di
 
 import com.russhwolf.settings.Settings
-import kmp.shared.base.infrastucture.provider.AuthProvider
-import kmp.shared.base.infrastucture.provider.AuthProviderImpl
-import kmp.shared.base.infrastucture.remote.HttpClient
+import kmp.shared.base.infrastructure.provider.AuthProvider
+import kmp.shared.base.infrastructure.provider.AuthProviderImpl
+import kmp.shared.base.infrastructure.remote.HttpClient
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
