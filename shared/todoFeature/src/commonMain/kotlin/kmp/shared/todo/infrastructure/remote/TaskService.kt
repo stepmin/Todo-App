@@ -18,7 +18,7 @@ internal class TaskService(private val client: HttpClient) {
 
     suspend fun getAllTasks(): Result<List<Task>> = runCatchingCommonNetworkExceptions {
         client.get(TASK_LIST_PATH) {}.body<List<TaskDto>>().map {
-            Task(it.userId, it.id, it.title, it.completed)
+            Task(it.id, it.userId, it.title, it.completed)
         }
     }
 

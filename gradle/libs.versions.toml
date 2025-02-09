@@ -20,6 +20,7 @@ jetbrains-composePlugin = "1.7.0" # Downgrade to 1.6.11 if you want to use compo
 activity = "1.9.2"
 navigation = "2.8.1"
 accompanist = "0.34.0"
+ksp = "2.0.21-1.0.27"
 ktor = "3.0.0"
 kermit = "2.0.3"
 settings = "1.1.1"
@@ -37,6 +38,8 @@ versionCatalogueUpdate = "0.8.1"
 versions = "0.49.0"
 desugar = "2.1.2"
 uiautomator = "2.3.0"
+room = "2.7.0-alpha11"
+sqlite = "2.5.0-SNAPSHOT"
 skie = "0.9.3"
 kotlinx-coroutines-test = "1.6.0"
 
@@ -88,6 +91,10 @@ compose-materialNavigation = { module = "org.jetbrains.compose.material:material
 compose-materialIconsCore = { module = "androidx.compose.material:material-icons-core" }
 # Activity
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
+# Database
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 # Navigation
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 # Accompanist
@@ -151,6 +158,8 @@ android-application = { id = "com.android.application", version.ref = "gradlePlu
 android-library = { id = "com.android.library", version.ref = "gradlePlugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+room = { id = "androidx.room", version.ref = "room" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 versionCatalogUpdate = { id = "nl.littlerobots.version-catalog-update", version.ref = "versionCatalogueUpdate" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }

@@ -18,16 +18,20 @@ internal class TodoSourceImpl(
 
     override fun observeTasks(): Flow<Result<List<Task>>> =
         flow {
-            //TODO-data from DB
-//            emit(taskLocalSource.getAllTasks())
             try {
+                val localData = taskLocalSource.getAllTasks()
+                if (localData.isNotEmpty()) {
+                    emit(Result.Success(localData))
+                }
                 val remoteTasks = taskService.getAllTasks()
                 if (remoteTasks is Result.Success) {
-                    taskLocalSource.saveAllTasks(remoteTasks)
+                    taskLocalSource.deleteAllTasks()
+                    taskLocalSource.saveAllTasks(remoteTasks.data)
                 }
                 emit(remoteTasks)
             } catch (e: Exception) {
                 // Handle remote exception
+                println("Exception: $e")
                 emit(Result.Error(CommonError.NetworkConnectionError(e)))
             }
         }

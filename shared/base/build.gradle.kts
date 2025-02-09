@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.mateeStarter.kmm.library)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 android {
@@ -16,4 +18,12 @@ ktlint {
             entry.file.toString().contains("generated")
         }
     }
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
+dependencies {
+    ksp(libs.room.compiler)
 }

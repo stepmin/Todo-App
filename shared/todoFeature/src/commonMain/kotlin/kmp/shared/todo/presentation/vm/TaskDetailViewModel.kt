@@ -28,6 +28,10 @@ class TaskDetailViewModel(
         }
     }
 
+    private fun markAsCompleted(i: Int) {
+        TODO("Not yet implemented")
+    }
+
     private suspend fun loadData(input: DetailRequest) {
         update { copy(loading = true) }
         when (val taskDetailUseCase = getTaskDetailUseCase(input)) {
