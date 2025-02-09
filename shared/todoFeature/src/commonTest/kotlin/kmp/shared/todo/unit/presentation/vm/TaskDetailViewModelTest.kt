@@ -1,17 +1,19 @@
 @file:OptIn(ExperimentalCoroutinesApi::class)
 
-package kmp.shared.todo.presentation.vm
+package kmp.shared.todo.unit.presentation.vm
 
 import dev.mokkery.answering.calls
 import dev.mokkery.everySuspend
 import dev.mokkery.mock
 import kmp.shared.base.Result
 import kmp.shared.base.error.domain.CommonError
-import kmp.shared.todo.data.source.TodoSource
-import kmp.shared.todo.di.sharedTasksModule
+import kmp.shared.todo.di.sharedTodoModule
 import kmp.shared.todo.di.taskDetailModule
-import kmp.shared.todo.domain.model.DetailRequest
+import kmp.shared.todo.domain.model.TaskDetailRequest
 import kmp.shared.todo.domain.model.TaskDetail
+import kmp.shared.todo.domain.repository.TasksRepository
+import kmp.shared.todo.presentation.vm.TaskDetailIntent
+import kmp.shared.todo.presentation.vm.TaskDetailViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -31,10 +33,10 @@ import kotlin.test.assertTrue
 
 class TaskDetailViewModelTest : KoinTest {
 
-    internal val sourceMock = mock<TodoSource> {}
+    internal val sourceMock = mock<TasksRepository> {}
 
     private val testModule = module {
-        single<TodoSource> { sourceMock }
+        single<TasksRepository> { sourceMock }
     }
 
     @BeforeTest
@@ -42,7 +44,7 @@ class TaskDetailViewModelTest : KoinTest {
         // Start Koin
         startKoin {
             modules(
-                sharedTasksModule,
+                sharedTodoModule,
                 taskDetailModule,
                 testModule,
             )
@@ -62,7 +64,7 @@ class TaskDetailViewModelTest : KoinTest {
             email = "username@zzz.cz",
         )
 
-        everySuspend { sourceMock.getTaskDetail(DetailRequest(5, 5)) } calls {
+        everySuspend { sourceMock.getTaskDetail(TaskDetailRequest(5, 5)) } calls {
             Result.Success(data)
         }
 
@@ -77,7 +79,7 @@ class TaskDetailViewModelTest : KoinTest {
 
         val expectedError = CommonError.NetworkConnectionError(RuntimeException(""))
 
-        everySuspend { sourceMock.getTaskDetail(DetailRequest(5, 5)) } calls {
+        everySuspend { sourceMock.getTaskDetail(TaskDetailRequest(5, 5)) } calls {
             Result.Error(expectedError)
         }
 

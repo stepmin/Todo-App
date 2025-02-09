@@ -6,7 +6,7 @@ import kmp.shared.todo.base.vm.BaseViewModel
 import kmp.shared.todo.base.vm.VmEvent
 import kmp.shared.todo.base.vm.VmIntent
 import kmp.shared.todo.base.vm.VmState
-import kmp.shared.todo.domain.model.DetailRequest
+import kmp.shared.todo.domain.model.TaskDetailRequest
 import kmp.shared.todo.domain.model.TaskDetail
 import kmp.shared.todo.domain.usecase.GetTaskDetailUseCase
 
@@ -19,7 +19,7 @@ class TaskDetailViewModel(
         when (intent) {
             TaskDetailIntent.OnAppeared -> {
                 //TODO-real call
-                loadData(DetailRequest(5, 5))
+                loadData(TaskDetailRequest(5, 5))
             }
 
             is TaskDetailIntent.OnCompletedTapped -> {
@@ -32,7 +32,7 @@ class TaskDetailViewModel(
         TODO("Not yet implemented")
     }
 
-    private suspend fun loadData(input: DetailRequest) {
+    private suspend fun loadData(input: TaskDetailRequest) {
         update { copy(loading = true) }
         when (val taskDetailUseCase = getTaskDetailUseCase(input)) {
             is Result.Success -> {

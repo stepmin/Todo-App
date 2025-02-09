@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalCoroutinesApi::class)
 
-package kmp.shared.todo.presentation.vm
+package kmp.shared.todo.unit.presentation.vm
 
 import dev.mokkery.answering.calls
 import dev.mokkery.every
@@ -8,10 +8,11 @@ import dev.mokkery.mock
 import kmp.shared.base.ErrorResult
 import kmp.shared.base.Result
 import kmp.shared.base.error.domain.CommonError
-import kmp.shared.todo.data.source.TodoSource
-import kmp.shared.todo.di.sharedTasksModule
+import kmp.shared.todo.di.sharedTodoModule
 import kmp.shared.todo.di.taskListModule
 import kmp.shared.todo.domain.model.Task
+import kmp.shared.todo.domain.repository.TasksRepository
+import kmp.shared.todo.presentation.vm.TaskListViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -32,10 +33,10 @@ import kotlin.test.assertTrue
 
 class TaskListViewModelTest : KoinTest {
 
-    internal val sourceMock = mock<TodoSource> {}
+    internal val sourceMock = mock<TasksRepository> {}
 
     private val testModule = module {
-        single<TodoSource> { sourceMock }
+        single<TasksRepository> { sourceMock }
     }
 
     @BeforeTest
@@ -43,7 +44,7 @@ class TaskListViewModelTest : KoinTest {
         // Start Koin
         startKoin {
             modules(
-                sharedTasksModule,
+                sharedTodoModule,
                 taskListModule,
                 testModule,
             )
@@ -68,8 +69,6 @@ class TaskListViewModelTest : KoinTest {
 
         val viewModel = get<TaskListViewModel>()
 
-        viewModel.onIntent(TaskListIntent.OnAppeared)
-
         advanceUntilIdle()
 
         assertTrue(viewModel.state.value.tasks?.size == 3)
@@ -84,8 +83,6 @@ class TaskListViewModelTest : KoinTest {
         }
 
         val viewModel = get<TaskListViewModel>()
-
-        viewModel.onIntent(TaskListIntent.OnAppeared)
 
         advanceUntilIdle()
 

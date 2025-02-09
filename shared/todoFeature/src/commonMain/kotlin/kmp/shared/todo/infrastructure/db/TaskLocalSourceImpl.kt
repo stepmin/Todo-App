@@ -1,27 +1,38 @@
 package kmp.shared.todo.infrastructure.db
 
+import kmp.shared.base.Result
+import kmp.shared.base.error.domain.CommonError
 import kmp.shared.base.infrastructure.db.AppDatabase
 import kmp.shared.base.infrastructure.db.entities.TaskEntity
+import kmp.shared.todo.data.source.TasksLocalSource
 import kmp.shared.todo.domain.model.Task
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class TaskLocalSource(
+class TaskLocalSourceImpl(
     private val database: AppDatabase,
-) {
-    suspend fun getAllTasks(): List<Task> {
-        return database.getTodoDao().getAll().map {
-            it.toDomainModel()
+) : TasksLocalSource {
+    override suspend fun getAllTasks(): Result<List<Task>> {
+        try {
+            return Result.Success(
+                database.getTodoDao().getAll().map {
+                    it.toDomainModel()
+                },
+            )
+        } catch (e: Exception) {
+            //TODO-specify execption
+            println("error when getting data from db: $e")
+            return Result.Error(CommonError.Unknown)
         }
     }
 
-    fun observerAllTasks(): Flow<List<Task>> {
+    override fun observerAllTasks(): Flow<List<Task>> {
         return database.getTodoDao().observerTasks().map {
             it.map { it.toDomainModel() }
         }
     }
 
-    suspend fun saveAllTasks(value: List<Task>) {
+    override suspend fun saveAllTasks(value: List<Task>) {
         val items = value.map {
             TaskEntity(it.id, it.userId, it.title, it.completed)
         }
@@ -29,7 +40,7 @@ class TaskLocalSource(
         database.getTodoDao().insertAll(items)
     }
 
-    suspend fun deleteAllTasks() {
+    override suspend fun deleteAllTasks() {
         database.getTodoDao().deleteAll()
     }
 }
