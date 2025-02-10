@@ -13,6 +13,8 @@ import kmp.shared.todo.presentation.ui.components.MultilineHintTextField
 import kmp.shared.todo.presentation.vm.TaskDetailState
 import kmp.shared.todo.presentation.vm.TaskListState
 import androidx.compose.ui.graphics.Color
+import kmp.shared.todo.presentation.ui.CenterAlignedTopAppBar
+import kmp.shared.todo.presentation.ui.components.TopBar
 
 @Preview(showBackground = true)
 @Composable
@@ -84,12 +86,34 @@ fun TaskDetailPreview() = AppTheme {
 @Preview(showBackground = true)
 @Composable
 fun CustomMultilineHintTextFieldPreview() = AppTheme {
-        MultilineHintTextField(
-            value = "",
-            onValueChanged = {},
-            hintText = "Enter your text here...",
-            modifier = Modifier.fillMaxSize()
-                .background(Color.Gray)
-        )
+    MultilineHintTextField(
+        value = "",
+        onValueChanged = {},
+        hintText = "Enter your text here...",
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Gray),
+    )
 }
 
+@Preview
+@Composable
+private fun CenterAlignedTopAppBarPreview() {
+    CenterAlignedTopAppBar(
+        "title",
+    ) {
+
+    }
+
+}
+
+@Preview
+@Composable
+private fun TopBarPreview() {
+    TopBar(
+        "title",
+    ) {
+
+    }
+
+}

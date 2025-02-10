@@ -2,6 +2,7 @@
 
 package kmp.shared.todo.unit.presentation.vm
 
+import androidx.lifecycle.SavedStateHandle
 import dev.mokkery.answering.calls
 import dev.mokkery.every
 import dev.mokkery.mock
@@ -33,10 +34,11 @@ import kotlin.test.assertTrue
 
 class TaskListViewModelTest : KoinTest {
 
-    internal val sourceMock = mock<TasksRepository> {}
+    internal val taskRepositoryMock = mock<TasksRepository> {}
 
     private val testModule = module {
-        single<TasksRepository> { sourceMock }
+        single<SavedStateHandle> { SavedStateHandle() }
+        single<TasksRepository> { taskRepositoryMock }
     }
 
     @BeforeTest
@@ -60,7 +62,7 @@ class TaskListViewModelTest : KoinTest {
             Task(id = 2, userId = 5, title = "title", completed = false),
             Task(id = 3, userId = 5, title = "title", completed = false),
         )
-        every { sourceMock.observeTasks() } calls {
+        every { taskRepositoryMock.observeTasks() } calls {
             flowOf(Result.Success(data))
         }
 
@@ -74,7 +76,7 @@ class TaskListViewModelTest : KoinTest {
 
     @Test
     fun `error response is presented with appropriate state`() = runTest {
-        every { sourceMock.observeTasks() } calls {
+        every { taskRepositoryMock.observeTasks() } calls {
             flowOf(
                 Result.Error(CommonError.NoNetworkConnection(Exception(""))),
             )

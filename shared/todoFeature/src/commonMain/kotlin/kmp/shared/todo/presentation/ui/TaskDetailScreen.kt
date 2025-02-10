@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import kmp.shared.base.MR
 import kmp.shared.todo.domain.model.Task
 import kmp.shared.todo.presentation.ui.test.TestTags
@@ -86,11 +87,13 @@ fun TaskDetailScreen(
                             .height(120.dp)
                             .testTag(if (state.task?.completed == true) TestTags.TaskDetailScreen.InCompleteButton else TestTags.TaskDetailScreen.CompleteButton),
                     ) {
-
                         val incomplete = stringResource(MR.strings.detail_screen_mark_button_incomplete)
                         val complete = stringResource(MR.strings.detail_screen_mark_button_complete)
 
-                        Text(if (state.task?.completed == true) incomplete else complete)
+                        Text(
+                            text = if (state.task?.completed == true) incomplete else complete,
+                            fontSize = 20.sp
+                        )
                     }
                 }
             }

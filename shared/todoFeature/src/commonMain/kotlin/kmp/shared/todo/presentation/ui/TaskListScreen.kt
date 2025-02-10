@@ -51,7 +51,7 @@ fun TaskListScreen(
                 Text(
                     text = "${state.tasks?.size ?: 0} ${stringResource(MR.strings.task_detail_screen_no_tasks_label)}",
                     fontSize = 18.sp,
-                    modifier = Modifier.padding(bottom = 16.dp),
+                    modifier = Modifier.padding(start = 16.dp),
                 )
 
                 if (state.tasks?.isNotEmpty() == true) {
@@ -69,7 +69,7 @@ fun TaskListScreen(
                 } else {
                     Text(
                         text = stringResource(MR.strings.task_detail_screen_no_task_info),
-                        modifier = Modifier.testTag(TestTags.TaskListScreen.NoTasks),
+                        modifier = Modifier.testTag(TestTags.TaskListScreen.NoTasks).padding(start = 16.dp),
                     )
                 }
             }

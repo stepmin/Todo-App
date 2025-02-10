@@ -1,5 +1,6 @@
 package kmp.shared.todo.presentation.ui
 
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -8,10 +9,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
+import dev.icerock.moko.resources.compose.stringResource
+import kmp.shared.base.MR
 import kmp.shared.todo.domain.usecase.TaskId
 import kmp.shared.todo.presentation.common.AppTheme
 import kmp.shared.todo.presentation.navigation.TodoNavigationGraph
 import kmp.shared.todo.presentation.navigation.composableDestination
+import kmp.shared.todo.presentation.ui.components.TopBar
 import kmp.shared.todo.presentation.vm.TaskListEvent
 import kmp.shared.todo.presentation.vm.TaskListIntent
 import kmp.shared.todo.presentation.vm.TaskListIntent.OnTaskCheckTapped
@@ -33,7 +37,7 @@ internal fun NavGraphBuilder.taskListNavigationRoute(
 
 @Composable
 internal fun TaskListRoute(
-    navigateToDetail: (TaskId) -> Unit
+    navigateToDetail: (TaskId) -> Unit,
 ) {
     val viewModel: TaskListViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -57,14 +61,25 @@ internal fun TaskListRoute(
     }
 
     AppTheme {
-        TaskListScreen(
-            state = state,
-            onTaskChecked = {
-                viewModel.onIntent(OnTaskCheckTapped(it))
+        Scaffold(
+            topBar = {
+                TopBar(
+                    title = stringResource(MR.strings.top_bar_label),
+                    actionIcon = {
+
+                    },
+                )
             },
-            onRowTapped = {
-                viewModel.onIntent(TaskListIntent.OnRowTapped(it.id))
-            },
-        )
+        ) {
+            TaskListScreen(
+                state = state,
+                onTaskChecked = {
+                    viewModel.onIntent(OnTaskCheckTapped(it))
+                },
+                onRowTapped = {
+                    viewModel.onIntent(TaskListIntent.OnRowTapped(it.id))
+                },
+            )
+        }
     }
 }

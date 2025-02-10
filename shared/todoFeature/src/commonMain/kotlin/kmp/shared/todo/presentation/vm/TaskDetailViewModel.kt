@@ -52,7 +52,9 @@ class TaskDetailViewModel(
             }
 
             TaskDetailIntent.OnCheckButtonClicked -> {
-                state.value.task?.let { updateTasksTextUseCase(it) }
+                state.value.task?.let {
+                    updateTasksTextUseCase(it)
+                }
             }
         }
     }
@@ -79,9 +81,9 @@ data class TaskDetailState(
 sealed interface TaskDetailIntent : VmIntent {
     data object OnInit : TaskDetailIntent
     data object OnAppeared : TaskDetailIntent
-    object OnCheckButtonClicked : TaskDetailIntent
     data class OnTaskButtonTapped(val task: Task) : TaskDetailIntent
     data class OnNoteChange(val text: String) : TaskDetailIntent
+    object OnCheckButtonClicked : TaskDetailIntent
 }
 
 sealed interface TaskDetailEvent : VmEvent {
