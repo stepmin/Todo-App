@@ -63,9 +63,9 @@ fun TopBar(
     TopAppBar(
         title = {
             if (currentRoute == TodoNavigationGraph.TaskList.route) {
-                Text(text = "TODO App")
+                Text(text = stringResource(MR.strings.top_bar_label))
             } else if (currentRoute == TodoNavigationGraph.TaskDetail.route) {
-                Text(text = "Task detail")
+                Text(text = stringResource(MR.strings.detail_route_label))
             }
         },
         windowInsets = WindowInsets.displayCutout,

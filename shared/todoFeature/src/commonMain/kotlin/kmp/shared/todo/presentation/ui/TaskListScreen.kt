@@ -16,6 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.icerock.moko.resources.compose.stringResource
+import kmp.shared.base.MR
 import kmp.shared.todo.domain.model.Task
 import kmp.shared.todo.presentation.ui.components.PlatformSpecificCheckboxView
 import kmp.shared.todo.presentation.ui.test.TestTags
@@ -47,7 +49,7 @@ fun TaskListScreen(
             Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
                 // Task Count
                 Text(
-                    text = "${state.tasks?.size ?: 0} Tasks",
+                    text = "${state.tasks?.size ?: 0} ${stringResource(MR.strings.task_detail_screen_no_tasks_label)}",
                     fontSize = 18.sp,
                     modifier = Modifier.padding(bottom = 16.dp),
                 )
@@ -66,7 +68,7 @@ fun TaskListScreen(
                     )
                 } else {
                     Text(
-                        text = "No tasks",
+                        text = stringResource(MR.strings.task_detail_screen_no_task_info),
                         modifier = Modifier.testTag(TestTags.TaskListScreen.NoTasks),
                     )
                 }
