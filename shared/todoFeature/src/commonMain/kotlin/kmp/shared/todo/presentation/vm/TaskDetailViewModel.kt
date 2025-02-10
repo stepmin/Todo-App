@@ -12,6 +12,7 @@ import kmp.shared.todo.domain.model.Task
 import kmp.shared.todo.domain.usecase.ChangeTaskStateUseCase
 import kmp.shared.todo.domain.usecase.GetTaskDetailUseCase
 import kmp.shared.todo.domain.usecase.TaskId
+import kmp.shared.todo.domain.usecase.UpdateTasksTextUseCase
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
 class TaskDetailViewModel(
     private val getTaskDetailUseCase: GetTaskDetailUseCase,
     private val changeTaskStateUseCase: ChangeTaskStateUseCase,
+    private val updateTasksTextUseCase: UpdateTasksTextUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<TaskDetailState, TaskDetailIntent, TaskDetailEvent>(TaskDetailState()) {
 
@@ -48,6 +50,10 @@ class TaskDetailViewModel(
                 val updatedTask = state.value.task?.updateTitle(intent.text)
                 state.value = state.value.copy(task = updatedTask)
             }
+
+            TaskDetailIntent.OnCheckButtonClicked -> {
+                state.value.task?.let { updateTasksTextUseCase(it) }
+            }
         }
     }
 
@@ -73,6 +79,7 @@ data class TaskDetailState(
 sealed interface TaskDetailIntent : VmIntent {
     data object OnInit : TaskDetailIntent
     data object OnAppeared : TaskDetailIntent
+    object OnCheckButtonClicked : TaskDetailIntent
     data class OnTaskButtonTapped(val task: Task) : TaskDetailIntent
     data class OnNoteChange(val text: String) : TaskDetailIntent
 }

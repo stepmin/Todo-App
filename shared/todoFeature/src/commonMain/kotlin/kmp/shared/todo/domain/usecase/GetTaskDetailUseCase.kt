@@ -14,5 +14,5 @@ class GetTaskUseCaseImpl(
     val repository: TasksRepository
 ) : GetTaskDetailUseCase {
 
-    override suspend fun invoke(taskDetailRequest: TaskId): Flow<Result<Task>> = repository.observeTaskDetail(taskDetailRequest)
+    override suspend fun invoke(taskId: TaskId): Flow<Result<Task>> = repository.observeTaskDetail(taskId)
 }

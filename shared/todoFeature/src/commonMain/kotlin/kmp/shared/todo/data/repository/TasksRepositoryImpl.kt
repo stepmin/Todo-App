@@ -58,4 +58,12 @@ internal class TasksRepositoryImpl(
         }
         return changeTaskState
     }
+
+    override suspend fun updateTasksText(task: Task): Result<Boolean> {
+        val updateTasksText = remoteSource.changeTaskState(TaskPatch(id = task.id, text = task.title))
+        if (updateTasksText is Result.Success) {
+            localSource.saveTask(task)
+        }
+        return updateTasksText
+    }
 }

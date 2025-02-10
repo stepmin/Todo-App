@@ -48,6 +48,7 @@ internal class TasksServiceImpl(private val client: HttpClient) : TasksService {
                 TaskPatch(
                     id = task.id,
                     completed = task.completed,
+                    text = task.text
                 ),
             )
         }.status == HttpStatusCode.OK

@@ -9,4 +9,5 @@ interface TasksRepository {
     fun observeTasks(): Flow<Result<List<Task>>>
     fun observeTaskDetail(taskDetailRequest: TaskId): Flow<Result<Task>>
     suspend fun changeTaskState(taskId: Task): Result<Boolean>
+    suspend fun updateTasksText(taskId: Task): Result<Boolean>
 }

@@ -1,6 +1,9 @@
 package kmp.android.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import kmp.android.shared.style.AppTheme
 import kmp.shared.todo.domain.model.Task
@@ -9,6 +12,7 @@ import kmp.shared.todo.presentation.ui.TaskListScreen
 import kmp.shared.todo.presentation.ui.components.MultilineHintTextField
 import kmp.shared.todo.presentation.vm.TaskDetailState
 import kmp.shared.todo.presentation.vm.TaskListState
+import androidx.compose.ui.graphics.Color
 
 @Preview(showBackground = true)
 @Composable
@@ -84,5 +88,8 @@ fun CustomMultilineHintTextFieldPreview() = AppTheme {
             value = "",
             onValueChanged = {},
             hintText = "Enter your text here...",
+            modifier = Modifier.fillMaxSize()
+                .background(Color.Gray)
         )
 }
+
