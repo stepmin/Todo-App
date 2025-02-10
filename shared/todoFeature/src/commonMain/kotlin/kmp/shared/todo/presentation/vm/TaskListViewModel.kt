@@ -7,6 +7,7 @@ import kmp.shared.todo.base.vm.BaseViewModel
 import kmp.shared.todo.base.vm.VmEvent
 import kmp.shared.todo.base.vm.VmIntent
 import kmp.shared.todo.base.vm.VmState
+import kmp.shared.todo.data.source.TasksLocalSource
 import kmp.shared.todo.domain.model.Task
 import kmp.shared.todo.domain.usecase.ChangeTaskStateUseCase
 import kmp.shared.todo.domain.usecase.GetTasksUseCase
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.onEach
 class TaskListViewModel(
     private val getTasksData: GetTasksUseCase,
     private val changeTaskState: ChangeTaskStateUseCase,
+    private val tasksLocalSource: TasksLocalSource
 ) : BaseViewModel<TaskListState, TaskListIntent, TaskListEvent>(TaskListState()) {
 
     init {
@@ -29,8 +31,12 @@ class TaskListViewModel(
                 loadData()
             }
 
-            is TaskListIntent.OnAppeared -> {
-                //TODO-remove - not used
+            is TaskListIntent.OnBackFromDetail -> {
+                tasksLocalSource.observerAllTasks().onEach { result ->
+                    update {
+                        copy(tasks = result)
+                    }
+                }.launchIn(viewModelScope)
             }
 
             is TaskListIntent.OnRowTapped -> {
@@ -86,7 +92,7 @@ data class TaskListState(
 
 sealed interface TaskListIntent : VmIntent {
     data object OnInit : TaskListIntent
-    data object OnAppeared : TaskListIntent
+    data object OnBackFromDetail : TaskListIntent
     data class OnRowTapped(val id: Int, val userId: Int) : TaskListIntent
     data class OnTaskCheckTapped(val task: Task) : TaskListIntent
 }

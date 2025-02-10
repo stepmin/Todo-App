@@ -14,6 +14,8 @@ import androidx.navigation.NavGraphBuilder
 import kmp.shared.todo.presentation.common.AppTheme
 import kmp.shared.todo.presentation.navigation.TodoNavigationGraph
 import kmp.shared.todo.presentation.navigation.composableDestination
+import kmp.shared.todo.presentation.vm.TaskListIntent
+import kmp.shared.todo.presentation.vm.TaskListViewModel
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -42,18 +44,16 @@ internal fun NavGraphBuilder.taskDetailNavigationRoute(
 internal fun TaskDetailRoute(
     navigateToBack: () -> Unit,
 ) {
-    val viewModel: TaskDetailViewModel = koinViewModel()
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val taskDetailViewModel: TaskDetailViewModel = koinViewModel()
+    val taskListViewModel: TaskListViewModel = koinViewModel()
+    val state by taskDetailViewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(viewModel) {
-        viewModel.onIntent(TaskDetailIntent.OnAppeared)
-    }
-
-    LaunchedEffect(viewModel) {
-        viewModel.events.collectLatest { event ->
+    LaunchedEffect(taskDetailViewModel) {
+        taskDetailViewModel.events.collectLatest { event ->
             when (event) {
                 TaskDetailEvent.NavigateBack -> {
                     navigateToBack()
+                    taskListViewModel.onIntent(TaskListIntent.OnBackFromDetail)
                 }
             }
         }
@@ -63,10 +63,10 @@ internal fun TaskDetailRoute(
         TaskDetailScreen(
             state = state,
             markTask = { task ->
-                viewModel.onIntent(TaskDetailIntent.OnTaskButtonTapped(task))
+                taskDetailViewModel.onIntent(TaskDetailIntent.OnTaskButtonTapped(task))
             },
             onNoteChange = {
-                viewModel.onIntent(TaskDetailIntent.OnNoteChange(it))
+                taskDetailViewModel.onIntent(TaskDetailIntent.OnNoteChange(it))
             },
         )
     }
