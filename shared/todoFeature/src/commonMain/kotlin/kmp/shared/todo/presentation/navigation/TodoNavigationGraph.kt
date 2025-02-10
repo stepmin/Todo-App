@@ -16,10 +16,8 @@ object TodoNavigationGraph : FeatureGraph(parent = null) {
         
         override val routeDefinition: String = "task_detail"
 
-        //TODO-navigation
         override val arguments: List<NamedNavArgument> = listOf(
-            navArgument("id") { type = NavType.IntType },
-            navArgument("userId") { type = NavType.IntType },
+            navArgument("taskId") { type = NavType.IntType }
         )
     }
 }

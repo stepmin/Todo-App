@@ -126,7 +126,7 @@ abstract class Destination(parent: FeatureGraph?) {
                 append("$path/")
                 argList
                     .joinToString("&") { arg ->
-                        append("${key(arg)}=${value(arg)}")
+                        "${key(arg)}=${value(arg)}"
                     }
                     .let(::append)
             }.toString()
