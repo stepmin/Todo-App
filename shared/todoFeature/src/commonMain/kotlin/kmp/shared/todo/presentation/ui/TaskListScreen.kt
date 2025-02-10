@@ -117,8 +117,7 @@ fun TaskItem(
     ) {
         Checkbox(
             checked = task.completed,
-            onCheckedChange = { onCheckedChange(task.copy(completed = !task.completed)) },
-//            onCheckedChange = { onCheckedChange(task) },
+            onCheckedChange = { onCheckedChange(task) },
         )
         Text(
             text = task.title,

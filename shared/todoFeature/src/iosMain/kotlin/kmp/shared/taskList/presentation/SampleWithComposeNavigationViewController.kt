@@ -27,7 +27,6 @@ fun SampleWithComposeNavigationViewController(
             ) {
                 todoNavigationNavGraph(
                     navHostController = navController,
-                    onShowMessage = showMessage,
                 )
             }
         }

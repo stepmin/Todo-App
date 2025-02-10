@@ -70,7 +70,7 @@ class TaskDetailViewModelTest : KoinTest {
 
         advanceUntilIdle()
 
-        assertTrue(viewModel.state.value.taskDetail != null)
+        assertTrue(viewModel.state.value.task != null)
 
         val expectedError = CommonError.NetworkConnectionError(RuntimeException(""))
 

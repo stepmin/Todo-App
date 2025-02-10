@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TaskPatch(
     val id: Int,
-    val completed: Boolean = false,
+    val completed: Boolean,
 )

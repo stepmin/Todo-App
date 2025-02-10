@@ -43,7 +43,7 @@ internal class TasksServiceImpl(private val client: HttpClient) : TasksService {
     }
 
     override suspend fun changeTaskState(task: TaskPatch): Result<Boolean> = runCatchingCommonNetworkExceptions {
-        client.patch("$TODOS_LIST_PATH${task.id}") {
+        client.patch("$TODOS_PATH${task.id}") {
             setBody(
                 TaskPatch(
                     id = task.id,
@@ -55,7 +55,8 @@ internal class TasksServiceImpl(private val client: HttpClient) : TasksService {
 
     private companion object {
         const val ROOT_PATH_TODOS = "/todos"
-        const val TODOS_LIST_PATH = "$ROOT_PATH_TODOS/"
-        const val ROOT_PATH_USERS = "/users"
+        //user id = 1 for testing reasons
+        const val TODOS_LIST_PATH = "$ROOT_PATH_TODOS/?userId=1"
+        const val TODOS_PATH = "$ROOT_PATH_TODOS/"
     }
 }

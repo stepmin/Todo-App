@@ -25,9 +25,11 @@ class TaskDetailScreenTest {
     fun basicTests() {
         with(composeTestRule) {
             onTaskDetailScreen {
+                //navigate to detail
                 checkThatLoaderIsVisible()
                 waitForList()
                 performNavigationToSampleSharedViewModel()
+                //we are on detail
                 checkTaskDetail()
             }
         }

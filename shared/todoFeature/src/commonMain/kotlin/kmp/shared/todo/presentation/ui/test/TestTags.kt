@@ -11,6 +11,8 @@ object TestTags {
 
     object TaskDetailScreen {
         object Loader : TestTag("loader")
+        object CompleteButton : TestTag("complete_button")
+        object InCompleteButton : TestTag("incomplete_button")
         object TaskDetail : TestTag("task_detail")
     }
 }

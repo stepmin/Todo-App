@@ -16,22 +16,19 @@ import kotlinx.coroutines.flow.collectLatest
 import org.koin.compose.viewmodel.koinViewModel
 
 internal fun NavGraphBuilder.taskListNavigationRoute(
-    onShowMessage: (String) -> Unit,
     navigateToDetail: (Int, Int) -> Unit,
 ) {
     composableDestination(
         destination = TodoNavigationGraph.TaskList,
     ) {
-        TodoNavigationListRoute(
-            onShowMessage = onShowMessage,
+        TaskListRoute(
             navigateToDetail = navigateToDetail,
         )
     }
 }
 
 @Composable
-internal fun TodoNavigationListRoute(
-    onShowMessage: (String) -> Unit,
+internal fun TaskListRoute(
     navigateToDetail: (Int, Int) -> Unit,
 ) {
     val viewModel: TaskListViewModel = koinViewModel()
@@ -44,8 +41,6 @@ internal fun TodoNavigationListRoute(
     LaunchedEffect(viewModel) {
         viewModel.events.collectLatest { event ->
             when (event) {
-                is TaskListEvent.ShowMessage -> onShowMessage(event.message)
-
                 is TaskListEvent.NavigateToTaskDetail -> {
                     navigateToDetail(event.taskId, event.userId)
                 }

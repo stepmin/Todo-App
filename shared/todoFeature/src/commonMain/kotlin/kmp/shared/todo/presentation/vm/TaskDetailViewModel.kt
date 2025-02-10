@@ -8,13 +8,16 @@ import kmp.shared.todo.base.vm.VmEvent
 import kmp.shared.todo.base.vm.VmIntent
 import kmp.shared.todo.base.vm.VmState
 import kmp.shared.todo.domain.model.Task
-import kmp.shared.todo.domain.usecase.TaskId
+import kmp.shared.todo.domain.usecase.ChangeTaskStateUseCase
 import kmp.shared.todo.domain.usecase.GetTaskDetailUseCase
+import kmp.shared.todo.domain.usecase.TaskId
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class TaskDetailViewModel(
     private val getTaskDetailUseCase: GetTaskDetailUseCase,
+    private val changeTaskStateUseCase: ChangeTaskStateUseCase,
 //    savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<TaskDetailState, TaskDetailIntent, TaskDetailEvent>(TaskDetailState()) {
 
@@ -28,11 +31,20 @@ class TaskDetailViewModel(
                 loadData(5)
             }
 
-            TaskDetailIntent.OnAppeared -> {
+            is TaskDetailIntent.OnAppeared -> {
             }
 
-            is TaskDetailIntent.OnCompletedTapped -> {
-                markAsCompleted(intent.id)
+            is TaskDetailIntent.OnTaskButtonTapped -> {
+                val updatedTask = intent.task.toggleCompleted()
+                changeTasksState(updatedTask)
+                if (updatedTask.completed) {
+                    _events.emit(TaskDetailEvent.NavigateBack)
+                }
+            }
+
+            is TaskDetailIntent.OnNoteChange -> {
+                val updatedTask = state.value.task?.updateTitle(intent.text)
+                state.value = state.value.copy(task = updatedTask)
             }
         }
     }
@@ -41,22 +53,22 @@ class TaskDetailViewModel(
         update { copy(loading = true) }
         getTaskDetailUseCase(input).onEach { result ->
             when (result) {
-                is Result.Success -> update { copy(taskDetail = result.data, loading = false) }
+                is Result.Success -> update { copy(task = result.data, loading = false) }
                 is Result.Error -> update { copy(error = result.error, loading = false) }
             }
-
         }.launchIn(viewModelScope)
     }
 
-    private fun markAsCompleted(i: Int) {
-        TODO("Not yet implemented")
+    private fun changeTasksState(task: Task) {
+        viewModelScope.launch {
+            changeTaskStateUseCase(task)
+        }
     }
-
 }
 
 data class TaskDetailState(
     val loading: Boolean = false,
-    val taskDetail: Task? = null,
+    val task: Task? = null,
     val error: ErrorResult? = null,
 ) : VmState {
     constructor() : this(true, null, null)
@@ -65,10 +77,10 @@ data class TaskDetailState(
 sealed interface TaskDetailIntent : VmIntent {
     data object OnInit : TaskDetailIntent
     data object OnAppeared : TaskDetailIntent
-    data class OnCompletedTapped(val id: Int) : TaskDetailIntent
+    data class OnTaskButtonTapped(val task: Task) : TaskDetailIntent
+    data class OnNoteChange(val text: String) : TaskDetailIntent
 }
 
 sealed interface TaskDetailEvent : VmEvent {
-    data class ShowMessage(val message: String) : TaskDetailEvent
     data object NavigateBack : TaskDetailEvent
 }

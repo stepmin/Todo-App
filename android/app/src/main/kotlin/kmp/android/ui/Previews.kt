@@ -3,9 +3,10 @@ package kmp.android.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import kmp.android.shared.style.AppTheme
-import kmp.shared.todo.domain.model.TaskDetail
+import kmp.shared.todo.domain.model.Task
 import kmp.shared.todo.presentation.ui.TaskDetailScreen
 import kmp.shared.todo.presentation.ui.TaskListScreen
+import kmp.shared.todo.presentation.ui.components.MultilineHintTextField
 import kmp.shared.todo.presentation.vm.TaskDetailState
 import kmp.shared.todo.presentation.vm.TaskListState
 
@@ -44,15 +45,15 @@ fun TaskListPreview() = AppTheme {
 fun TaskDetailLoaderPreview() = AppTheme {
     val state = TaskDetailState(
         loading = true,
-        taskDetail = null,
+        task = null,
         error = null,
     )
 
     TaskDetailScreen(
         state = state,
-    ) {
-
-    }
+        markTask = {},
+        onNoteChange = {},
+    )
 }
 
 @Preview(showBackground = true)
@@ -60,22 +61,28 @@ fun TaskDetailLoaderPreview() = AppTheme {
 fun TaskDetailPreview() = AppTheme {
     val state = TaskDetailState(
         loading = false,
-        taskDetail = TaskDetail(
+        task = Task(
             id = 1,
             userId = 1,
             title = "Go to the gym",
             completed = true,
-            name = "John Doe",
-            username = "",
-            email = ""
         ),
         error = null,
     )
 
     TaskDetailScreen(
         state = state,
-    ) {
-
-    }
+        markTask = {},
+        onNoteChange = {},
+    )
 }
 
+@Preview(showBackground = true)
+@Composable
+fun CustomMultilineHintTextFieldPreview() = AppTheme {
+        MultilineHintTextField(
+            value = "",
+            onValueChanged = {},
+            hintText = "Enter your text here...",
+        )
+}

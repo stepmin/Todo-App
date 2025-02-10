@@ -9,14 +9,12 @@ import kmp.shared.todo.presentation.ui.taskListNavigationRoute
 
 fun NavGraphBuilder.todoNavigationNavGraph(
     navHostController: NavHostController,
-    onShowMessage: (String) -> Unit,
 ) {
     navigation(
         startDestination = TodoNavigationGraph.TaskList.route,
         route = TodoNavigationGraph.rootPath,
     ) {
         taskListNavigationRoute(
-            onShowMessage = onShowMessage,
             navigateToDetail = { id, userId ->
                 navHostController.navigateToDetail(
                     taskId = id,
@@ -26,7 +24,9 @@ fun NavGraphBuilder.todoNavigationNavGraph(
         )
 
         taskDetailNavigationRoute(
-            onShowMessage = onShowMessage,
+            navigateToBack = {
+                navHostController.popBackStack()
+            }
         )
     }
 }

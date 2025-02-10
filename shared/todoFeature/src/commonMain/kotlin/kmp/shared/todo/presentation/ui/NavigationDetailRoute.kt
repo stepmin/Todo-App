@@ -3,7 +3,6 @@ package kmp.shared.todo.presentation.ui
 import kmp.shared.todo.presentation.vm.TaskDetailEvent
 import kmp.shared.todo.presentation.vm.TaskDetailIntent
 import kmp.shared.todo.presentation.vm.TaskDetailViewModel
-import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -12,8 +11,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import dev.icerock.moko.resources.compose.stringResource
-import kmp.shared.base.MR
 import kmp.shared.todo.presentation.common.AppTheme
 import kmp.shared.todo.presentation.navigation.TodoNavigationGraph
 import kmp.shared.todo.presentation.navigation.composableDestination
@@ -26,7 +23,7 @@ internal fun NavController.navigateToDetail(taskId: Int, userId: Int) {
 }
 
 internal fun NavGraphBuilder.taskDetailNavigationRoute(
-    onShowMessage: (String) -> Unit,
+    navigateToBack: () -> Unit,
 ) {
     val destination = TodoNavigationGraph.TaskDetail
     composableDestination(
@@ -36,14 +33,14 @@ internal fun NavGraphBuilder.taskDetailNavigationRoute(
         val userId = it.arguments?.getInt("userId")
         SavedStateHandle(mapOf("id" to id, "userId" to userId))
         TaskDetailRoute(
-            onShowMessage = onShowMessage,
+            navigateToBack = navigateToBack,
         )
     }
 }
 
 @Composable
 internal fun TaskDetailRoute(
-    onShowMessage: (String) -> Unit,
+    navigateToBack: () -> Unit,
 ) {
     val viewModel: TaskDetailViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -55,15 +52,22 @@ internal fun TaskDetailRoute(
     LaunchedEffect(viewModel) {
         viewModel.events.collectLatest { event ->
             when (event) {
-                TaskDetailEvent.NavigateBack -> TODO()
-                is TaskDetailEvent.ShowMessage -> TODO()
+                TaskDetailEvent.NavigateBack -> {
+                    navigateToBack()
+                }
             }
         }
     }
 
     AppTheme {
-        TaskDetailScreen(state) {
-            viewModel.onIntent(TaskDetailIntent.OnCompletedTapped(it))
-        }
+        TaskDetailScreen(
+            state = state,
+            markTask = { task ->
+                viewModel.onIntent(TaskDetailIntent.OnTaskButtonTapped(task))
+            },
+            onNoteChange = {
+                viewModel.onIntent(TaskDetailIntent.OnNoteChange(it))
+            },
+        )
     }
 }

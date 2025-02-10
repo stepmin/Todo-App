@@ -28,14 +28,17 @@ class TaskListViewModel(
             is TaskListIntent.OnInit -> {
                 loadData()
             }
+
             is TaskListIntent.OnAppeared -> {
                 //TODO-remove - not used
             }
+
             is TaskListIntent.OnRowTapped -> {
                 _events.emit(NavigateToTaskDetail(intent.id, intent.userId))
             }
+
             is TaskListIntent.OnTaskCheckTapped -> {
-                changeTaskState(intent.task)
+                updateTaskState(intent.task.toggleCompleted())
             }
         }
     }
@@ -50,15 +53,22 @@ class TaskListViewModel(
         }.launchIn(viewModelScope)
     }
 
-    private suspend fun changeTaskState(task: Task) {
-        update { copy(tasks = tasks?.map { if (it.id == task.id) task.copy(completed = !it.completed) else it }) }
+    private suspend fun updateTaskState(task: Task) {
+        update {
+            copy(
+                tasks = tasks?.map {
+                    if (it.id == task.id) task else it
+                },
+            )
+        }
         val invoke = changeTaskState.invoke(task)
         //TODO-error handling in case api start working
         when (invoke) {
             is Result.Success -> {
                 println("state changed successfully")
             }
-            is Result.Error-> {
+
+            is Result.Error -> {
                 println("state changed was not successful")
             }
         }
@@ -82,6 +92,5 @@ sealed interface TaskListIntent : VmIntent {
 }
 
 sealed interface TaskListEvent : VmEvent {
-    data class ShowMessage(val message: String) : TaskListEvent
     data class NavigateToTaskDetail(val taskId: Int, val userId: Int) : TaskListEvent
 }
