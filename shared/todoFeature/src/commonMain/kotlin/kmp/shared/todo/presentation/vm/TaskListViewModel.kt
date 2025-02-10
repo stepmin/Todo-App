@@ -31,7 +31,7 @@ class TaskListViewModel(
                 loadData()
             }
 
-            is TaskListIntent.OnBackFromDetail -> {
+            is TaskListIntent.OnStateChangeOnDetail -> {
                 tasksLocalSource.observerAllTasks().onEach { result ->
                     update {
                         copy(tasks = result)
@@ -92,7 +92,7 @@ data class TaskListState(
 
 sealed interface TaskListIntent : VmIntent {
     data object OnInit : TaskListIntent
-    data object OnBackFromDetail : TaskListIntent
+    data object OnStateChangeOnDetail : TaskListIntent
     data class OnRowTapped(val id: Int, val userId: Int) : TaskListIntent
     data class OnTaskCheckTapped(val task: Task) : TaskListIntent
 }

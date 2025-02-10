@@ -38,7 +38,7 @@ class TaskDetailViewModel(
                 val updatedTask = intent.task.toggleCompleted()
                 changeTasksState(updatedTask)
                 if (updatedTask.completed) {
-                    _events.emit(TaskDetailEvent.NavigateBack)
+                    _events.emit(TaskDetailEvent.NavigateBackAfterChange)
                 }
             }
 
@@ -82,5 +82,5 @@ sealed interface TaskDetailIntent : VmIntent {
 }
 
 sealed interface TaskDetailEvent : VmEvent {
-    data object NavigateBack : TaskDetailEvent
+    data object NavigateBackAfterChange : TaskDetailEvent
 }

@@ -51,9 +51,9 @@ internal fun TaskDetailRoute(
     LaunchedEffect(taskDetailViewModel) {
         taskDetailViewModel.events.collectLatest { event ->
             when (event) {
-                TaskDetailEvent.NavigateBack -> {
+                TaskDetailEvent.NavigateBackAfterChange -> {
                     navigateToBack()
-                    taskListViewModel.onIntent(TaskListIntent.OnBackFromDetail)
+                    taskListViewModel.onIntent(TaskListIntent.OnStateChangeOnDetail)
                 }
             }
         }

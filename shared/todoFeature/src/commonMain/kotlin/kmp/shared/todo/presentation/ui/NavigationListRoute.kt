@@ -35,7 +35,7 @@ internal fun TaskListRoute(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(viewModel) {
-        viewModel.onIntent(TaskListIntent.OnBackFromDetail)
+        viewModel.onIntent(TaskListIntent.OnStateChangeOnDetail)
     }
 
     LaunchedEffect(viewModel) {
