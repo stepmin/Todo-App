@@ -11,19 +11,16 @@ import kmp.shared.todo.data.source.TasksLocalSource
 import kmp.shared.todo.domain.model.Task
 import kmp.shared.todo.domain.usecase.ChangeTaskStateUseCase
 import kmp.shared.todo.domain.usecase.GetTasksUseCase
-import kmp.shared.todo.presentation.vm.TaskListEvent.*
+import kmp.shared.todo.domain.usecase.TaskId
+import kmp.shared.todo.presentation.vm.TaskListEvent.NavigateToTaskDetail
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 class TaskListViewModel(
     private val getTasksData: GetTasksUseCase,
     private val changeTaskState: ChangeTaskStateUseCase,
-    private val tasksLocalSource: TasksLocalSource
+    private val tasksLocalSource: TasksLocalSource,
 ) : BaseViewModel<TaskListState, TaskListIntent, TaskListEvent>(TaskListState()) {
-
-    init {
-        onIntent(TaskListIntent.OnInit)
-    }
 
     override suspend fun applyIntent(intent: TaskListIntent) {
         when (intent) {
@@ -31,20 +28,20 @@ class TaskListViewModel(
                 loadData()
             }
 
-            is TaskListIntent.OnStateChangeOnDetail -> {
+            is TaskListIntent.OnRowTapped -> {
+                _events.emit(NavigateToTaskDetail(intent.id))
+            }
+
+            is TaskListIntent.OnTaskCheckTapped -> {
+                updateTaskState(intent.task.toggleCompleted())
+            }
+
+            TaskListIntent.OnAppeared -> {
                 tasksLocalSource.observerAllTasks().onEach { result ->
                     update {
                         copy(tasks = result)
                     }
                 }.launchIn(viewModelScope)
-            }
-
-            is TaskListIntent.OnRowTapped -> {
-                _events.emit(NavigateToTaskDetail(intent.id, intent.userId))
-            }
-
-            is TaskListIntent.OnTaskCheckTapped -> {
-                updateTaskState(intent.task.toggleCompleted())
             }
         }
     }
@@ -92,11 +89,11 @@ data class TaskListState(
 
 sealed interface TaskListIntent : VmIntent {
     data object OnInit : TaskListIntent
-    data object OnStateChangeOnDetail : TaskListIntent
-    data class OnRowTapped(val id: Int, val userId: Int) : TaskListIntent
+    data object OnAppeared : TaskListIntent
+    data class OnRowTapped(val id: TaskId) : TaskListIntent
     data class OnTaskCheckTapped(val task: Task) : TaskListIntent
 }
 
 sealed interface TaskListEvent : VmEvent {
-    data class NavigateToTaskDetail(val taskId: Int, val userId: Int) : TaskListEvent
+    data class NavigateToTaskDetail(val taskId: Int) : TaskListEvent
 }

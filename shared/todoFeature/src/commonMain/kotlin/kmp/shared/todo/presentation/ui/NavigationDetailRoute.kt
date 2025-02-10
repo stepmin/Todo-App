@@ -1,11 +1,11 @@
 package kmp.shared.todo.presentation.ui
 
-import kmp.shared.todo.presentation.vm.TaskDetailEvent
-import kmp.shared.todo.presentation.vm.TaskDetailIntent
-import kmp.shared.todo.presentation.vm.TaskDetailViewModel
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
@@ -14,13 +14,14 @@ import androidx.navigation.NavGraphBuilder
 import kmp.shared.todo.presentation.common.AppTheme
 import kmp.shared.todo.presentation.navigation.TodoNavigationGraph
 import kmp.shared.todo.presentation.navigation.composableDestination
-import kmp.shared.todo.presentation.vm.TaskListIntent
-import kmp.shared.todo.presentation.vm.TaskListViewModel
+import kmp.shared.todo.presentation.vm.TaskDetailEvent
+import kmp.shared.todo.presentation.vm.TaskDetailIntent
+import kmp.shared.todo.presentation.vm.TaskDetailViewModel
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.compose.viewmodel.koinViewModel
 
-internal fun NavController.navigateToDetail(taskId: Int, userId: Int) {
-    val route = TodoNavigationGraph.TaskDetail(taskId, userId)
+internal fun NavController.navigateToDetail(taskId: Int) {
+    val route = TodoNavigationGraph.TaskDetail(taskId)
     navigate(route)
 }
 
@@ -31,9 +32,8 @@ internal fun NavGraphBuilder.taskDetailNavigationRoute(
     composableDestination(
         destination = destination,
     ) { it: NavBackStackEntry ->
-        val id = it.arguments?.getInt("id")
-        val userId = it.arguments?.getInt("userId")
-        SavedStateHandle(mapOf("id" to id, "userId" to userId))
+        val id = it.arguments?.getInt("taskId")
+        SavedStateHandle(mapOf("taskId" to id))
         TaskDetailRoute(
             navigateToBack = navigateToBack,
         )
@@ -44,16 +44,22 @@ internal fun NavGraphBuilder.taskDetailNavigationRoute(
 internal fun TaskDetailRoute(
     navigateToBack: () -> Unit,
 ) {
-    val taskDetailViewModel: TaskDetailViewModel = koinViewModel()
-    val taskListViewModel: TaskListViewModel = koinViewModel()
-    val state by taskDetailViewModel.state.collectAsStateWithLifecycle()
+    val viewModel: TaskDetailViewModel = koinViewModel()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    var loaded by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(taskDetailViewModel) {
-        taskDetailViewModel.events.collectLatest { event ->
+    LaunchedEffect(viewModel) {
+        if (loaded) {
+            viewModel.onIntent(TaskDetailIntent.OnAppeared)
+        } else {
+            viewModel.onIntent(TaskDetailIntent.OnInit)
+            loaded = true
+        }
+
+        viewModel.events.collectLatest { event ->
             when (event) {
                 TaskDetailEvent.NavigateBackAfterChange -> {
                     navigateToBack()
-                    taskListViewModel.onIntent(TaskListIntent.OnStateChangeOnDetail)
                 }
             }
         }
@@ -63,10 +69,10 @@ internal fun TaskDetailRoute(
         TaskDetailScreen(
             state = state,
             markTask = { task ->
-                taskDetailViewModel.onIntent(TaskDetailIntent.OnTaskButtonTapped(task))
+                viewModel.onIntent(TaskDetailIntent.OnTaskButtonTapped(task))
             },
             onNoteChange = {
-                taskDetailViewModel.onIntent(TaskDetailIntent.OnNoteChange(it))
+                viewModel.onIntent(TaskDetailIntent.OnNoteChange(it))
             },
         )
     }

@@ -50,4 +50,5 @@ val taskDetailModule = module {
 
     // Use cases
     factoryOf(::GetTaskUseCaseImpl) bind GetTaskDetailUseCase::class
+    factoryOf(::ChangeTaskStateUseCaseImpl) bind ChangeTaskStateUseCase::class
 }

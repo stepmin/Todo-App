@@ -3,8 +3,12 @@ package kmp.shared.todo.presentation.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
+import kmp.shared.todo.domain.usecase.TaskId
 import kmp.shared.todo.presentation.common.AppTheme
 import kmp.shared.todo.presentation.navigation.TodoNavigationGraph
 import kmp.shared.todo.presentation.navigation.composableDestination
@@ -16,7 +20,7 @@ import kotlinx.coroutines.flow.collectLatest
 import org.koin.compose.viewmodel.koinViewModel
 
 internal fun NavGraphBuilder.taskListNavigationRoute(
-    navigateToDetail: (Int, Int) -> Unit,
+    navigateToDetail: (TaskId) -> Unit,
 ) {
     composableDestination(
         destination = TodoNavigationGraph.TaskList,
@@ -29,20 +33,24 @@ internal fun NavGraphBuilder.taskListNavigationRoute(
 
 @Composable
 internal fun TaskListRoute(
-    navigateToDetail: (Int, Int) -> Unit,
+    navigateToDetail: (TaskId) -> Unit
 ) {
     val viewModel: TaskListViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    var dataLoaded by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(viewModel) {
-        viewModel.onIntent(TaskListIntent.OnStateChangeOnDetail)
-    }
+    LaunchedEffect(key1 = viewModel) {
+        if (dataLoaded) {
+            viewModel.onIntent(TaskListIntent.OnAppeared)
+        } else {
+            viewModel.onIntent(TaskListIntent.OnInit)
+            dataLoaded = true
+        }
 
-    LaunchedEffect(viewModel) {
         viewModel.events.collectLatest { event ->
             when (event) {
                 is TaskListEvent.NavigateToTaskDetail -> {
-                    navigateToDetail(event.taskId, event.userId)
+                    navigateToDetail(event.taskId)
                 }
             }
         }
@@ -55,7 +63,7 @@ internal fun TaskListRoute(
                 viewModel.onIntent(OnTaskCheckTapped(it))
             },
             onRowTapped = {
-                navigateToDetail(it.id, it.userId)
+                viewModel.onIntent(TaskListIntent.OnRowTapped(it.id))
             },
         )
     }

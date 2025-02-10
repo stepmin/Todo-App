@@ -1,5 +1,6 @@
 package kmp.shared.todo.presentation.vm
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import kmp.shared.base.ErrorResult
 import kmp.shared.base.Result
@@ -18,27 +19,28 @@ import kotlinx.coroutines.launch
 class TaskDetailViewModel(
     private val getTaskDetailUseCase: GetTaskDetailUseCase,
     private val changeTaskStateUseCase: ChangeTaskStateUseCase,
-//    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<TaskDetailState, TaskDetailIntent, TaskDetailEvent>(TaskDetailState()) {
-
-    init {
-        onIntent(TaskDetailIntent.OnInit)
-    }
 
     override suspend fun applyIntent(intent: TaskDetailIntent) {
         when (intent) {
             TaskDetailIntent.OnInit -> {
-                loadData(5)
+                val taskId = savedStateHandle.get<TaskId>("taskId")
+                taskId?.let { loadData(it) }
             }
 
             is TaskDetailIntent.OnAppeared -> {
+                //not used
             }
 
             is TaskDetailIntent.OnTaskButtonTapped -> {
                 val updatedTask = intent.task.toggleCompleted()
-                changeTasksState(updatedTask)
-                if (updatedTask.completed) {
-                    _events.emit(TaskDetailEvent.NavigateBackAfterChange)
+                update { copy(task = updatedTask) }
+                viewModelScope.launch {
+                    changeTaskStateUseCase(updatedTask)
+                    if (updatedTask.completed) {
+                        _events.emit(TaskDetailEvent.NavigateBackAfterChange)
+                    }
                 }
             }
 
@@ -57,12 +59,6 @@ class TaskDetailViewModel(
                 is Result.Error -> update { copy(error = result.error, loading = false) }
             }
         }.launchIn(viewModelScope)
-    }
-
-    private fun changeTasksState(task: Task) {
-        viewModelScope.launch {
-            changeTaskStateUseCase(task)
-        }
     }
 }
 

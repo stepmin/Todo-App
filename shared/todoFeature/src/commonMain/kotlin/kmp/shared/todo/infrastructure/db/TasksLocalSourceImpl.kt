@@ -26,7 +26,7 @@ class TasksLocalSourceImpl(
                 )
             }
         } catch (e: Exception) {
-            //TODO-specify execption
+            //TODO-specify exception
             println("error when getting data from db: $e")
             Result.Error(CommonError.Unknown)
         }
@@ -69,7 +69,7 @@ class TasksLocalSourceImpl(
             Result.Success(true)
         } catch (e: Exception) {
             println("exception when saving task detail: $e")
-            //TODO-specify execption
+            //TODO-specify exception
             Result.Error(CommonError.Unknown)
         }
     }

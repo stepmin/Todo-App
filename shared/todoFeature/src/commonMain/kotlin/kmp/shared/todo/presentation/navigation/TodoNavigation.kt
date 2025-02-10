@@ -15,11 +15,8 @@ fun NavGraphBuilder.todoNavigationNavGraph(
         route = TodoNavigationGraph.rootPath,
     ) {
         taskListNavigationRoute(
-            navigateToDetail = { id, userId ->
-                navHostController.navigateToDetail(
-                    taskId = id,
-                    userId = userId,
-                )
+            navigateToDetail = { taskId ->
+                navHostController.navigateToDetail(taskId = taskId,)
             }
         )
 
