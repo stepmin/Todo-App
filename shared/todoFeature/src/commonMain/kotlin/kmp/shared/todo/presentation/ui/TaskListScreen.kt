@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Checkbox
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kmp.shared.todo.domain.model.Task
+import kmp.shared.todo.presentation.ui.components.PlatformSpecificCheckboxView
 import kmp.shared.todo.presentation.ui.test.TestTags
 import kmp.shared.todo.presentation.ui.test.testTag
 import kmp.shared.todo.presentation.vm.TaskListState
@@ -44,11 +44,7 @@ fun TaskListScreen(
                 CircularProgressIndicator()
             }
         } else {
-            Column(
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-            ) {
+            Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
                 // Task Count
                 Text(
                     text = "${state.tasks?.size ?: 0} Tasks",
@@ -115,9 +111,11 @@ fun TaskItem(
             .testTag(TestTags.TaskListScreen.Task),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Checkbox(
+        PlatformSpecificCheckboxView(
             checked = task.completed,
-            onCheckedChange = { onCheckedChange(task) },
+            onCheckedChanged = {
+                onCheckedChange(task)
+            }
         )
         Text(
             text = task.title,
