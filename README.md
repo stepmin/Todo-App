@@ -1,6 +1,6 @@
 # Kotlin Multiplatform ToDo App (KMP ToDo)
 
-A sample ToDo application built with Compose Multiplatform. Its built on top of https://github.com/MateeDevs/MateeStarter
+A sample ToDo application built with Compose Multiplatform.
 
 ## Project Overview
 
